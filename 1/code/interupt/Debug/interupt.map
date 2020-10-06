@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\loop\main.asm Tue Oct 06 17:48:19 2020
+AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\interupt\main.asm Tue Oct 06 14:01:05 2020
 
 
 EQU  SIGNATURE_000 0000001e
@@ -604,7 +604,6 @@ EQU  INT2addr     00000024
 EQU  OC0addr      00000026
 EQU  SPMRaddr     00000028
 EQU  INT_VECTORS_SIZE 0000002a
-EQU  limit        000009c2
-CSEG init         00000000
-CSEG start        00000003
-CSEG loop         00000005
+CSEG init         0000002a
+CSEG ISR_TOV0     00000038
+CSEG loop         00000037

@@ -1,36 +1,38 @@
 ;
-; lab1.asm
-; Change output periodically using loop
-; Created: 4/10/2020
+; main.asm
+; Change the 0 bit of PortB every 1ms using time loop.
+;
 ; Author : Emmanouil Petrakos
+; Created: 4/10/2020
+; Developed with AtmelStudio 7.0.129
 ;
 
 ; loop iterations
-.equ limit = 199
+.equ limit = 2498
 
-; used to track loop iterations
-clr R31 ; clear register 
+init:
+	; mask used to flip only bit 0
+	clr R17
+	sbr R17,1
+	; set port bit 0 as output
+	sbi DDRB,0
 
-; used to change output
-cbr R16,1 ; clear bit 0
-sbr R17,1 ; set bit 0
-
-; set port bit 0 as output
-sbi DDRB,0
-
+start:
+	; Set limit. Limit > 256, register pair is needed
+	ldi R25,HIGH(limit)	; 1 cycle
+	ldi R24,LOW(limit)	; 1 cycle
+	
 loop:
-	nop				; 1 cycle
-	inc R31			; 1 cycle
-	cpi R31, limit	; 1 cycle
-	brne loop		; 2 cycle
+	; Decrement register pair till zero
+	sbiw R24,1			; 2 cycle
+	brne loop			; 2 cycle if true, 1 if false
 
 	nop
-	; clear register
-	clr R31			; 1 cycle
-	; flip R16
-	eor R16, R17	; 1 cycle
+	nop
+
+	; eor PortB with mask. Bit 0 flips, the rest are unafected.
+	in r16,PORTB		; 1 cycle
+	eor R16, R17		; 1 cycle
 	; change output
-	out PORTB, R16	; 1 cycle
-	rjmp loop		; 2 cycle
-
-
+	out PORTB, R16		; 1 cycle
+	rjmp start			; 2 cycle
