@@ -1,5 +1,5 @@
 ;
-; main.asm
+; loop\main.asm
 ; Change the 0 bit of PortB every 1ms using time loop.
 ;
 ; Author : Emmanouil Petrakos
@@ -27,9 +27,9 @@ loop:
 	sbiw R24,1			; 2 cycle
 	brne loop			; 2 cycle if true, 1 if false
 
-	nop
-	nop
-
+	; padding to increase accuracy
+	nop					; 1 cycle
+	nop					; 1 cycle
 	; eor PortB with mask. Bit 0 flips, the rest are unafected.
 	in r16,PORTB		; 1 cycle
 	eor R16, R17		; 1 cycle
