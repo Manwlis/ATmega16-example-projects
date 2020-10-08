@@ -22,8 +22,8 @@
   <FILE>loop.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <init><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\loop\main.asm</FILE><LINE>13</LINE></init>
-  <start><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\loop\main.asm</FILE><LINE>20</LINE></start>
-  <loop><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\loop\main.asm</FILE><LINE>25</LINE></loop>
+  <init><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\loop\main.asm</FILE><LINE>14</LINE></init>
+  <start><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\loop\main.asm</FILE><LINE>19</LINE></start>
+  <loop><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\loop\main.asm</FILE><LINE>28</LINE></loop>
  </LABELS>
 </ASSEMBLER_INFO>

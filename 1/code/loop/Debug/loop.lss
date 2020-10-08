@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\loop\main.asm Tue Oct 06 17:48:19 2020
+AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\loop\main.asm Thu Oct 08 21:04:01 2020
 
 [builtin](2): Including file 'D:/Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m16def.inc'
 [builtin](2): Including file 'D:/Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m16def.inc'
@@ -870,7 +870,7 @@ AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\loop\mai
                                  #endif  /* _M16DEF_INC_ */
                                  
                                  
-                                 ; main.asm
+                                 ; loop\main.asm
                                  ; Change the 0 bit of PortB every 1ms using time loop.
                                  ;
                                  ; Author : Emmanouil Petrakos
@@ -881,31 +881,32 @@ AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\loop\mai
                                  ; loop iterations
                                  .equ limit = 2498
                                  
+                                 ; initialization routine. Runs once at program start.
                                  init:
-                                 	; mask used to flip only bit 0
-000000 2711                      	clr R17
-000001 6011                      	sbr R17,1
                                  	; set port bit 0 as output
-000002 9ab8                      	sbi DDRB,0
+000000 9ab8                      	sbi DDRB,0			; 2 cycle
                                  
+                                 ; Subsequent iterations have to pay 2 extra cycle from the final rjmp. Start them here in order to keep them time alligned with the first.
                                  start:
-                                 	; Set limit. Limit > 256, register pair is neededs
+                                 	; mask used to flip only bit 0
+000001 2711                      	clr R17				; 1 cycle
+000002 6011                      	sbr R17,1			; 1 cycle
+                                 
+                                 	; Instructions for delay
+                                 	; Set limit. Limit > 256, register pair is needed
 000003 e099                      	ldi R25,HIGH(limit)	; 1 cycle
 000004 ec82                      	ldi R24,LOW(limit)	; 1 cycle
-                                 	
                                  loop:
                                  	; Decrement register pair till zero
 000005 9701                      	sbiw R24,1			; 2 cycle
 000006 f7f1                      	brne loop			; 2 cycle if true, 1 if false
                                  
-000007 0000                      	nop
-000008 0000                      	nop
-                                 
+                                 	; Instructions needed to change output
                                  	; eor PortB with mask. Bit 0 flips, the rest are unafected.
-000009 b308                      	in r16,PORTB		; 1 cycle
-00000a 2701                      	eor R16, R17		; 1 cycle
+000007 b308                      	in r16,PORTB		; 1 cycle
+000008 2701                      	eor R16, R17		; 1 cycle
                                  	; change output
-00000b bb08                      	out PORTB, R16		; 1 cycle
+000009 bb08                      	out PORTB, R16		; 1 cycle
 
 
 RESOURCE USE INFORMATION
@@ -943,19 +944,19 @@ cpi   :   0 cpse  :   0 dec   :   0 eor   :   1 fmul  :   0 fmuls :   0
 fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :   0 jmp   :   0 
 ld    :   0 ldd   :   0 ldi   :   2 lds   :   0 lpm   :   0 lsl   :   0 
 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   2 or    :   0 ori   :   0 out   :   1 pop   :   0 
+neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   1 pop   :   0 
 push  :   0 rcall :   0 ret   :   0 reti  :   0 rjmp  :   1 rol   :   0 
 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   1 sbic  :   0 sbis  :   0 
 sbiw  :   1 sbr   :   1 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
 sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   0 
 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 11 out of 113 (9.7%)
+Instructions used: 10 out of 113 (8.8%)
 
 "ATmega16" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x00001a     26      0     26   16384   0.2%
+[.cseg] 0x000000 0x000016     22      0     22   16384   0.1%
 [.dseg] 0x000060 0x000060      0      0      0    1024   0.0%
 [.eseg] 0x000000 0x000000      0      0      0     512   0.0%
 

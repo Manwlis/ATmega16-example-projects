@@ -23,7 +23,7 @@ init:
 
 	; Set Timer0
 	ldi r16,(1<<CS01)|(1<<CS00)|(1<<WGM01)
-	out TCCR0,r16 ; Timer clock = system clock / 256. Clear counter on match.
+	out TCCR0,r16 ; Timer clock = system clock / 64. Clear counter on match.
 	ldi r16,1<<TOV0
 	out TIFR,r16 ; Clear TOV0/ clear pending interrupts
 	ldi r16,1<<OCIE0

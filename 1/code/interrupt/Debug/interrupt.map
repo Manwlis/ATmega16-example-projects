@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\interrupt\main.asm Wed Oct 07 18:51:53 2020
+AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\interrupt\main.asm Thu Oct 08 21:51:19 2020
 
 
 EQU  SIGNATURE_000 0000001e
