@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\interrupt\main.asm Thu Oct 08 21:51:19 2020
+AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\interrupt\main.asm Fri Oct 09 20:41:38 2020
 
 [builtin](2): Including file 'D:/Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m16def.inc'
 [builtin](2): Including file 'D:/Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m16def.inc'
@@ -877,16 +877,17 @@ AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\interrup
                                  ; Created: 6/10/2020
                                  ; Developed with AtmelStudio 7.0.129
                                  ;
+                                 .equ OCR_value = 155 ; Compare register value
                                  
                                  .org $000
 000000 c029                      rjmp init ; Start from initialization routine
                                  .org $026
-000026 c014                      rjmp ISR_TOV0
+000026 c014                      rjmp ISR_TC0
                                  
                                  .org $02A
                                  ; Initialization routine
                                  init:
-                                 	; Set stack pointer so program returns from interrupt where it occured
+                                 	; Set stack pointer so program returns from interrupt where it occurred
 00002a e004                      	ldi r16, HIGH(RAMEND) ; Upper byte
 00002b bf0e                      	out SPH,r16 ; to stack pointer
 00002c e50f                      	ldi r16, LOW(RAMEND) ; Lower byte
@@ -899,8 +900,8 @@ AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\interrup
 000031 bf08                      	out TIFR,r16 ; Clear TOV0/ clear pending interrupts
 000032 e002                      	ldi r16,1<<OCIE0
 000033 bf09                      	out TIMSK,r16 ; Enable Timer/Counter0 compare interrupt
-000034 e90c                      	ldi r16,156 ; Compare register value
-000035 bf0c                      	out OCR0,r16
+000034 e90b                      	ldi r16,OCR_value
+000035 bf0c                      	out OCR0,r16 ; Set Compare Register
                                  
                                  	; Mask used to calculate output
 000036 2711                      	clr R17
@@ -914,8 +915,8 @@ AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\interrup
                                  
 00003a cfff                      loop: rjmp loop ; Infinite loop
                                  
-                                 ; Interrupt service routine
-                                 ISR_TOV0:
+                                 ; Interrupt service routine for timer/counter0 compare match mode
+                                 ISR_TC0:
 00003b b308                      	in r16,PORTB ; Read Port B
 00003c 2701                      	eor r16, r17 ; Invert bit 0 of r16 register
 00003d bb08                      	out PORTB,r16 ; Write Port B

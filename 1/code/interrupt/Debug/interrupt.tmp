@@ -22,8 +22,8 @@
   <FILE>interrupt.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <init><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\interrupt\main.asm</FILE><LINE>17</LINE></init>
-  <ISR_TOV0><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\interrupt\main.asm</FILE><LINE>47</LINE></ISR_TOV0>
-  <loop><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\interrupt\main.asm</FILE><LINE>44</LINE></loop>
+  <init><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\interrupt\main.asm</FILE><LINE>18</LINE></init>
+  <ISR_TC0><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\interrupt\main.asm</FILE><LINE>48</LINE></ISR_TC0>
+  <loop><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\interrupt\main.asm</FILE><LINE>45</LINE></loop>
  </LABELS>
 </ASSEMBLER_INFO>

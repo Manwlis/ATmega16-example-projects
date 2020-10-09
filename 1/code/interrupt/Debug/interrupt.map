@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\interrupt\main.asm Thu Oct 08 21:51:19 2020
+AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\1\code\interrupt\main.asm Fri Oct 09 20:41:38 2020
 
 
 EQU  SIGNATURE_000 0000001e
@@ -604,6 +604,7 @@ EQU  INT2addr     00000024
 EQU  OC0addr      00000026
 EQU  SPMRaddr     00000028
 EQU  INT_VECTORS_SIZE 0000002a
+EQU  OCR_value    0000009b
 CSEG init         0000002a
-CSEG ISR_TOV0     0000003b
+CSEG ISR_TC0      0000003b
 CSEG loop         0000003a
