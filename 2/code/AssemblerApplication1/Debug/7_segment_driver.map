@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm Tue Oct 13 19:50:40 2020
+AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm Wed Oct 14 20:29:26 2020
 
 
 EQU  SIGNATURE_000 0000001e
@@ -606,11 +606,17 @@ EQU  SPMRaddr     00000028
 EQU  INT_VECTORS_SIZE 0000002a
 EQU  OCR_value    0000009b
 EQU  data_pointer 00000060
+EQU  segments_pointer 00000068
 EQU  num_of_data  00000008
-EQU  offset       00000000
+EQU  offset       00000001
 CSEG init         0000002a
-CSEG ISR_TC0      00000045
-CSEG set_data_loop 00000031
-CSEG loop         00000044
-CSEG circular_counter 0000004e
-CSEG BCD_to_7_segment_Decoder 00000052
+CSEG ISR_TC0      00000061
+CSEG write_7_segments 00000042
+CSEG write_data   00000059
+CSEG loop         00000041
+CSEG set_data_loop 0000005c
+CSEG ring_counter 00000072
+CSEG ring_to_bcd  00000076
+CSEG BCD_to_7_segment_Decoder 0000007c
+CSEG rtb_loop     00000078
+CSEG bcd_to_7seg_exit 00000086

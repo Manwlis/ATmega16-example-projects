@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm Tue Oct 13 19:50:40 2020
+AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm Wed Oct 14 20:29:26 2020
 
 [builtin](2): Including file 'D:/Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m16def.inc'
 [builtin](2): Including file 'D:/Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m16def.inc'
@@ -871,30 +871,32 @@ AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\Assemble
                                  
                                  
                                  ; main.asm
-                                 ; TO_DO
+                                 ; TO_DO titlo kai perigrafh
                                  ;
                                  ; Created: 13/10/2020
                                  ; Author : Emmanouil Petrakos
                                  ; Developed with AtmelStudio 7.0.129
                                  ;
                                  
-                                 .equ OCR_value = 155 ; Compare register value
-                                 .equ data_pointer = 0x0060 ; potision of SRAM used to store data
-                                 .equ num_of_data = 8 ;
-                                 .equ offset = 0 ; value of first data
                                  //--------------------------------------------------------------------
-                                 // temp regs: r16, r17
-                                 // routine/interrupt param/return regs: r0
-                                 // pointer regs: r26, r27
+                                 // temp regs: r16, r17, r18
+                                 // routine/interrupt param/return regs: r0, r1
+                                 // pointer regs: r26, r27, r28, r29
                                  //--------------------------------------------------------------------
                                  
-                                 ; Interrupt vectors
+                                 .equ OCR_value = 155 ; Compare register value
+                                 .equ data_pointer = 0x0060 ; position of SRAM used to store data
+                                 .equ segments_pointer = 0x0068 ; position of SRAM used to store 7 segments encodings
+                                 .equ num_of_data = 8 ;
+                                 .equ offset = 1 ; value of first data
+                                 
+                                 ; Reset and Interrupt vectors
                                  .org $000
 000000 c029                      rjmp init ; Start from initialization routine
                                  .org $026
-000026 c01e                      rjmp ISR_TC0
+000026 c03a                      rjmp ISR_TC0
                                  
-                                 
+                                 ; code segment
                                  .org $02A
                                  //--------------------------------------------------------------------
                                  // Initialization routine
@@ -907,40 +909,103 @@ AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\Assemble
 00002c e50f                      	ldi r16, LOW( RAMEND ) ; Lower byte
 00002d bf0d                      	out SPL,r16 ; to stack pointer
                                  
-                                 	; Set memory. 8 consecutive positions with numbers 0-7
-00002e e0b0                      	ldi r27, HIGH( data_pointer ) ; pointer registers X (r26:r27)
-00002f e6a0                          ldi r26, LOW( data_pointer )
-                                 
-000030 e000                      	ldi r16, offset ; starting value
-                                 set_data_loop:
-000031 930d                      	st X+, r16 ; store to SRAM / post increment
-000032 9503                      	inc r16	
-000033 3008                      	cpi r16, offset + num_of_data
-000034 f7e1                      	brne set_data_loop
+                                 	; save encoding
+00002e 940e 0042                 	call write_7_segments
+                                 	; set output
+000030 940e 0059                 	call write_data
                                  
                                  	; Set Ports A and C as outputs and init
-000035 ef0f                      	ldi r16, 0xFF
-000036 bb0a                      	out DDRA, R16
-000037 bb04                      	out DDRC, R16
-000038 bb0b                      	out PORTA, R16 ; 1 is off
-000039 2700                      	clr r16
-00003a bb05                      	out PORTC, R16
+000032 ef0f                      	ldi r16, 0xFF
+000033 bb0a                      	out DDRA, R16
+000034 bb04                      	out DDRC, R16
+000035 bb0b                      	out PORTA, R16 ; all segments off
+000036 e800                      	ldi r16, 0b10000000 ; in order to start from rightmost 7 segment
+000037 bb05                      	out PORTC, R16
                                  
                                  	; Set Timer0 at ~1ms
-00003b e00b                      	ldi r16,(1<<CS01)|(1<<CS00)|(1<<WGM01)
-00003c bf03                      	out TCCR0,r16 ; Timer clock = system clock / 64. Clear counter on match.
-00003d e001                      	ldi r16,1<<TOV0
-00003e bf08                      	out TIFR,r16 ; Clear TOV0/ clear pending interrupts
-00003f e002                      	ldi r16,1<<OCIE0
-000040 bf09                      	out TIMSK,r16 ; Enable Timer/Counter0 compare interrupt
-000041 e90b                      	ldi r16,OCR_value
-000042 bf0c                      	out OCR0,r16 ; Set Compare Register
+000038 e00b                      	ldi r16,(1<<CS01)|(1<<CS00)|(1<<WGM01)
+000039 bf03                      	out TCCR0,r16 ; Timer clock = system clock / 64. Clear counter on match.
+00003a e001                      	ldi r16,1<<TOV0
+00003b bf08                      	out TIFR,r16 ; Clear TOV0/ clear pending interrupts
+00003c e002                      	ldi r16,1<<OCIE0
+00003d bf09                      	out TIMSK,r16 ; Enable Timer/Counter0 compare interrupt
+00003e e90b                      	ldi r16,OCR_value
+00003f bf0c                      	out OCR0,r16 ; Set Compare Register
                                  
                                  	; Enable interrupts
-000043 9478                      	sei
+000040 9478                      	sei
                                  
+                                 ;inc r0
                                  // Infinite loop.
-000044 cfff                      loop: rjmp loop 
+                                 loop:
+000041 cfff                      	rjmp loop 
+                                 
+                                 
+                                 //--------------------------------------------------------------------
+                                 // Save in SRAM numbers 0-9 in 7 segment format.
+                                 // arguments: none
+                                 // returns: none
+                                 // changes: r16, r28, r29
+                                 //--------------------------------------------------------------------
+                                 write_7_segments:
+                                 	; Set memory pointer 
+000042 e0d0                      	ldi r29, HIGH( segments_pointer ) ; pointer registers Y (r28:r29)
+000043 e6c8                          ldi r28, LOW( segments_pointer ) ; index X doesn't support displacement
+                                 
+                                 	; save encodings
+000044 e003                      	ldi r16, 0b00000011
+000045 8308                      	std Y+0, r16
+                                 
+000046 e90f                      	ldi r16, 0b10011111
+000047 8309                      	std Y+1, r16
+                                 
+000048 e205                      	ldi r16, 0b00100101
+000049 830a                      	std Y+2, r16
+                                 
+00004a e00d                      	ldi r16, 0b00001101
+00004b 830b                      	std Y+3, r16
+                                 
+00004c e909                      	ldi r16, 0b10011001
+00004d 830c                      	std Y+4, r16
+                                 
+00004e e409                      	ldi r16, 0b01001001
+00004f 830d                      	std Y+5, r16
+                                 
+000050 e401                      	ldi r16, 0b01000001
+000051 830e                      	std Y+6, r16
+                                 
+000052 e10f                      	ldi r16, 0b00011111
+000053 830f                      	std Y+7, r16
+                                 
+000054 e001                      	ldi r16, 0b00000001
+000055 8708                      	std Y+8, r16
+                                 	
+000056 e009                      	ldi r16, 0b00001001
+000057 8709                      	std Y+9, r16
+                                 
+000058 9508                      	ret
+                                 
+                                 
+                                 //--------------------------------------------------------------------
+                                 // Save in SRAM the data that are going to be shown. LSB to MSB
+                                 // first_pos_value = offset
+                                 // next_pos_value = prev_pos_value + 1
+                                 // num_of_data times
+                                 // arguments: none
+                                 // returns: none
+                                 // changes: r16, r26, r27
+                                 //--------------------------------------------------------------------
+                                 write_data:
+                                 	; Set memory pointer 
+000059 e0b0                      	ldi r27, HIGH( data_pointer ) ; pointer registers X (r26:r27)
+00005a e6a0                          ldi r26, LOW( data_pointer )
+00005b e001                      	ldi r16, offset ; starting value
+                                 	set_data_loop:
+00005c 930d                      		st X+, r16 ; store to SRAM / post increment
+00005d 9503                      		inc r16	
+00005e 3009                      		cpi r16, offset + num_of_data
+00005f f7e1                      		brne set_data_loop
+000060 9508                      	ret
                                  
                                  
                                  //--------------------------------------------------------------------
@@ -948,52 +1013,94 @@ AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\Assemble
                                  // Controls 7 segments outputs.
                                  // arguments: none
                                  // returns: none
-                                 // changes: r16
+                                 // changes: r0, r1, r16, r26, r27
                                  //--------------------------------------------------------------------
                                  ISR_TC0:
-                                 ; TO_DO
-                                 
                                  	; show nothing
-000045 ef0f                      	ldi r16, 0xFF
-000046 bb0b                      	out PORTA, R16
-                                 		
+000061 ef0f                      	ldi r16, 0xFF
+000062 bb0b                      	out PORTA, R16
                                  	
-000047 b205                      	in r0, PORTC ; get currenty enabled 7 seg 
-000048 d005                      	rcall circular_counter ; calculate next 7 seg
-000049 ba05                      	out PORTC, r0 ; disable enabled 7 seg and enable next
+000063 b205                      	in r0, PORTC ; get currenty enabled 7 seg 
+000064 d00d                      	rcall ring_counter ; calculate next 7 seg
+000065 ba05                      	out PORTC, r0 ; disable enabled 7 seg and enable next
                                  
-                                 	;read from mem based on r0 value
+                                 	; read from mem based on ring counter value
+000066 d00f                      	rcall ring_to_bcd
+000067 2d01                      	mov r16, r1
+000068 950a                      	dec r16 ; 1st number is in pos X+0, 2nd number is in pos X+1, etc.
                                  
-                                 	; decode, invert and put output
-00004a d007                      	rcall BCD_to_7_segment_Decoder
-00004b 9400                      	com r0 ; 0 = on, 1 = off. Need to invert
-00004c ba0b                      	out PORTA, r0
+000069 e0b0                      	ldi r27, HIGH( data_pointer ) ; pointer registers X (r26:r27)
+00006a e6a0                          ldi r26, LOW( data_pointer )
+                                 	; add offset to mem pointer registers.
+00006b 2711                      	clr r17 ; empty reg
+00006c 0fa0                      	add r26, r16
+                                 	// This (adc) isn't needed with the current data location and size configuration.
+                                 	// Keep it for soundness and easier future changes.
+00006d 1fb1                      	adc r27, r17
                                  
-00004d 9518                      	reti ; clears interrupt flag
+00006e 900c                      	ld r0, X ; read data in bcd format
+                                 
+00006f d00c                      	rcall BCD_to_7_segment_Decoder ; decode
+000070 ba1b                      	out PORTA, r1 ; put output
+                                 
+000071 9518                      	reti ; clears interrupt flag
                                  
                                  
                                  //--------------------------------------------------------------------
-                                 // Circular shift to the left.
+                                 // Circular shift to the left. ex: 00001000 -> 00010000
                                  // arguments: input in r0
                                  // returns: shifted output in r0
                                  // changes: r0, r16
                                  //--------------------------------------------------------------------
-                                 circular_counter:
-00004e 2700                      	clr r16 ; empty reg
-00004f 0c00                      	lsl r0 ; Logical Shift Left / bit 0 cleared, bit 7 to carry
-000050 1e00                      	adc r0, r16 ; Add with carry and empty reg / carry to bit 0
-000051 9508                      	ret
+                                 ring_counter:
+000072 2700                      	clr r16 ; empty reg
+000073 0c00                      	lsl r0 ; Logical Shift Left / bit 0 cleared, bit 7 to carry
+000074 1e00                      	adc r0, r16 ; Add with carry and empty reg / carry to bit 0
+000075 9508                      	ret
                                  
                                  
                                  //--------------------------------------------------------------------
-                                 // Decodes a BCD number (0-9) to 7 segment format
+                                 // Transform a ring number to bcd. ex: 01000000 -> 00000111
+                                 // arguments: ring format number in r0
+                                 // returns: bcd number in r1
+                                 // changes: r0, r1, r16
+                                 //--------------------------------------------------------------------
+                                 ring_to_bcd:
+000076 2411                      	clr r1
+000077 2d00                      	mov r16, r0
+                                 ; bcd number = num of shift that are needed to clear ring number.
+                                 rtb_loop:
+000078 9413                      	inc r1
+000079 9506                      	lsr r16
+00007a f7e9                      	brne rtb_loop
+00007b 9508                      	ret
+                                 
+                                 
+                                 //--------------------------------------------------------------------
+                                 // Decodes a BCD number (0-9) to 7 segment format. ex: 00000010 -> 00100101
+                                 // 7 segment is in common cathode format.
                                  // arguments: bcd number in r0
-                                 // returns: 7 segment number in r0
-                                 // changes: r0, r16
+                                 // returns: 7 segment number in r1
+                                 // changes: r1, r16, r17, r18, r26, r27
                                  //--------------------------------------------------------------------
                                  BCD_to_7_segment_Decoder:
+                                 	; check if data can be translated in 7 segment format
+00007c 2d00                      	mov r16,r0
+00007d ef1f                      	ldi r17, 0b11111111 ; no segment enabled
+00007e 300a                      	cpi r16, 10
+00007f f430                      	brsh bcd_to_7seg_exit ; if data >= 10 (unsigned), skip
                                  
-                                 	
+000080 e0b0                      	ldi r27, HIGH( segments_pointer ) ; pointer registers X (r26:r27)
+000081 e6a8                          ldi r26, LOW( segments_pointer )
+                                 	; add offset to mem pointer registers.
+000082 2722                      	clr r18 ; empty reg
+000083 0fa0                      	add r26, r16
+000084 1fb2                      	adc r27, r18
+                                 
+000085 911c                      	ld r17, X ; read 7 segment number
+                                 
+                                 bcd_to_7seg_exit:
+000086 2e11                      	mov r1, r17
 
 
 RESOURCE USE INFORMATION
@@ -1011,39 +1118,39 @@ counted separately from r26..r31 here.
 .dseg memory usage only counts static data declared with .byte
 
 "ATmega16" register use summary:
-x  :   1 y  :   0 z  :   0 r0 :   6 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
+x  :   3 y  :  10 z  :   0 r0 :   7 r1 :   5 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  26 r17:   0 r18:   0 r19:   0 r20:   0 
-r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   1 r27:   1 r28:   0 
-r29:   0 r30:   0 r31:   0 
-Registers used: 5 out of 35 (14.3%)
+r13:   0 r14:   0 r15:   0 r16:  54 r17:   5 r18:   2 r19:   0 r20:   0 
+r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   5 r27:   5 r28:   1 
+r29:   1 r30:   0 r31:   0 
+Registers used: 11 out of 35 (31.4%)
 
 "ATmega16" instruction use summary:
-.lds  :   0 .sts  :   0 adc   :   1 add   :   0 adiw  :   0 and   :   0 
+.lds  :   0 .sts  :   0 adc   :   3 add   :   2 adiw  :   0 and   :   0 
 andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
 brcc  :   0 brcs  :   0 break :   0 breq  :   0 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   1 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
-brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
-clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   2 cls   :   0 
-clt   :   0 clv   :   0 clz   :   0 com   :   1 cp    :   0 cpc   :   0 
-cpi   :   1 cpse  :   0 dec   :   0 eor   :   0 fmul  :   0 fmuls :   0 
-fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :   1 jmp   :   0 
-ld    :   0 ldd   :   0 ldi   :  11 lds   :   0 lpm   :   0 lsl   :   1 
-lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
+brne  :   2 brpl  :   0 brsh  :   1 brtc  :   0 brts  :   0 brvc  :   0 
+brvs  :   0 bset  :   0 bst   :   0 call  :   2 cbi   :   0 cbr   :   0 
+clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   4 cls   :   0 
+clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
+cpi   :   2 cpse  :   0 dec   :   1 eor   :   0 fmul  :   0 fmuls :   0 
+fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :   2 jmp   :   0 
+ld    :   2 ldd   :   0 ldi   :  29 lds   :   0 lpm   :   0 lsl   :   1 
+lsr   :   1 mov   :   4 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
 neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :  13 pop   :   0 
-push  :   0 rcall :   2 ret   :   2 reti  :   1 rjmp  :   3 rol   :   0 
+push  :   0 rcall :   3 ret   :   5 reti  :   1 rjmp  :   3 rol   :   0 
 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 sbis  :   0 
 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
 sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
-sez   :   0 sleep :   0 spm   :   0 st    :   1 std   :   0 sts   :   0 
+sez   :   0 sleep :   0 spm   :   0 st    :   1 std   :  10 sts   :   0 
 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 16 out of 113 (14.2%)
+Instructions used: 23 out of 113 (20.4%)
 
 "ATmega16" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0000a6     86      0     86   16384   0.5%
+[.cseg] 0x000000 0x000110    192      0    192   16384   1.2%
 [.dseg] 0x000060 0x000060      0      0      0    1024   0.0%
 [.eseg] 0x000000 0x000000      0      0      0     512   0.0%
 

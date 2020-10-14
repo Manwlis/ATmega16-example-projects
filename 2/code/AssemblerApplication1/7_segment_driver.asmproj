@@ -12,7 +12,7 @@
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
     <Language>ASSEMBLY</Language>
     <AssemblyName>AssemblerApplication1</AssemblyName>
-    <Name>AssemblerApplication1</Name>
+    <Name>7_segment_driver</Name>
     <RootNamespace>AssemblerApplication1</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
     <EntryFile>$(MSBuildProjectDirectory)\main.asm</EntryFile>
