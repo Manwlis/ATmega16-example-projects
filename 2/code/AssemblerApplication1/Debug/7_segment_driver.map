@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm Wed Oct 14 20:29:26 2020
+AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm Thu Oct 15 22:08:01 2020
 
 
 EQU  SIGNATURE_000 0000001e
@@ -604,7 +604,7 @@ EQU  INT2addr     00000024
 EQU  OC0addr      00000026
 EQU  SPMRaddr     00000028
 EQU  INT_VECTORS_SIZE 0000002a
-EQU  OCR_value    0000009b
+EQU  OCR_value    0000004d
 EQU  data_pointer 00000060
 EQU  segments_pointer 00000068
 EQU  num_of_data  00000008

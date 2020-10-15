@@ -22,16 +22,16 @@
   <FILE>7_segment_driver.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <init><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>34</LINE></init>
+  <init><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>36</LINE></init>
   <ISR_TC0><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>147</LINE></ISR_TC0>
   <write_7_segments><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>79</LINE></write_7_segments>
   <write_data><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>127</LINE></write_data>
-  <loop><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>69</LINE></loop>
+  <loop><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>70</LINE></loop>
   <set_data_loop><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>132</LINE></set_data_loop>
-  <ring_counter><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>184</LINE></ring_counter>
-  <ring_to_bcd><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>197</LINE></ring_to_bcd>
-  <BCD_to_7_segment_Decoder><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>215</LINE></BCD_to_7_segment_Decoder>
-  <rtb_loop><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>201</LINE></rtb_loop>
-  <bcd_to_7seg_exit><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>231</LINE></bcd_to_7seg_exit>
+  <ring_counter><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>182</LINE></ring_counter>
+  <ring_to_bcd><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>195</LINE></ring_to_bcd>
+  <BCD_to_7_segment_Decoder><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>213</LINE></BCD_to_7_segment_Decoder>
+  <rtb_loop><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>199</LINE></rtb_loop>
+  <bcd_to_7seg_exit><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>230</LINE></bcd_to_7seg_exit>
  </LABELS>
 </ASSEMBLER_INFO>

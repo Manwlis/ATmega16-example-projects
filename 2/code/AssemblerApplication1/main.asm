@@ -1,6 +1,8 @@
 ;
 ; main.asm
-; TO_DO titlo kai perigrafh
+; Driver for an 8 digits 7 segment display. Shows data from SRAM.
+; Data space: 0x0060 to 0x0067, LSB to MSB. Legal digits: 0-9.
+; Framerate ~60Hz per digit.
 ;
 ; Created: 13/10/2020
 ; Author : Emmanouil Petrakos
@@ -13,7 +15,7 @@
 // pointer regs: r26, r27, r28, r29
 //--------------------------------------------------------------------
 
-.equ OCR_value = 155 ; Compare register value
+.equ OCR_value = 77 ; Compare register value
 .equ data_pointer = 0x0060 ; position of SRAM used to store data
 .equ segments_pointer = 0x0068 ; position of SRAM used to store 7 segments encodings
 .equ num_of_data = 8 ;
@@ -51,8 +53,8 @@ init:
 	ldi r16, 0b10000000 ; in order to start from rightmost 7 segment
 	out PORTC, R16
 
-	; Set Timer0 at ~1ms
-	ldi r16,(1<<CS01)|(1<<CS00)|(1<<WGM01)
+	; Set Timer0 at ~2ms
+	ldi r16,(1<<CS02)|(1<<WGM01)
 	out TCCR0,r16 ; Timer clock = system clock / 64. Clear counter on match.
 	ldi r16,1<<TOV0
 	out TIFR,r16 ; Clear TOV0/ clear pending interrupts
@@ -140,7 +142,7 @@ write_data:
 // Controls 7 segments outputs.
 // arguments: none
 // returns: none
-// changes: r0, r1, r16, r26, r27
+// changes: r0, r1, r16, r17, r18, r26, r27
 //--------------------------------------------------------------------
 ISR_TC0:
 	; show nothing

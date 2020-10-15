@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm Wed Oct 14 20:29:26 2020
+AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm Thu Oct 15 22:08:01 2020
 
 [builtin](2): Including file 'D:/Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m16def.inc'
 [builtin](2): Including file 'D:/Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m16def.inc'
@@ -871,7 +871,9 @@ AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\Assemble
                                  
                                  
                                  ; main.asm
-                                 ; TO_DO titlo kai perigrafh
+                                 ; Driver for an 8 digits 7 segment display. Shows data from SRAM.
+                                 ; Data space: 0x0060 to 0x0067, LSB to MSB. Legal digits: 0-9.
+                                 ; Framerate ~60Hz per digit.
                                  ;
                                  ; Created: 13/10/2020
                                  ; Author : Emmanouil Petrakos
@@ -880,11 +882,11 @@ AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\Assemble
                                  
                                  //--------------------------------------------------------------------
                                  // temp regs: r16, r17, r18
-                                 // routine/interrupt param/return regs: r0, r1
+                                 // subroutine/interrupt param/return regs: r0, r1
                                  // pointer regs: r26, r27, r28, r29
                                  //--------------------------------------------------------------------
                                  
-                                 .equ OCR_value = 155 ; Compare register value
+                                 .equ OCR_value = 77 ; Compare register value
                                  .equ data_pointer = 0x0060 ; position of SRAM used to store data
                                  .equ segments_pointer = 0x0068 ; position of SRAM used to store 7 segments encodings
                                  .equ num_of_data = 8 ;
@@ -922,23 +924,21 @@ AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\Assemble
 000036 e800                      	ldi r16, 0b10000000 ; in order to start from rightmost 7 segment
 000037 bb05                      	out PORTC, R16
                                  
-                                 	; Set Timer0 at ~1ms
-000038 e00b                      	ldi r16,(1<<CS01)|(1<<CS00)|(1<<WGM01)
+                                 	; Set Timer0 at ~2ms
+000038 e00c                      	ldi r16,(1<<CS02)|(1<<WGM01)
 000039 bf03                      	out TCCR0,r16 ; Timer clock = system clock / 64. Clear counter on match.
 00003a e001                      	ldi r16,1<<TOV0
 00003b bf08                      	out TIFR,r16 ; Clear TOV0/ clear pending interrupts
 00003c e002                      	ldi r16,1<<OCIE0
 00003d bf09                      	out TIMSK,r16 ; Enable Timer/Counter0 compare interrupt
-00003e e90b                      	ldi r16,OCR_value
+00003e e40d                      	ldi r16,OCR_value
 00003f bf0c                      	out OCR0,r16 ; Set Compare Register
                                  
                                  	; Enable interrupts
 000040 9478                      	sei
                                  
-                                 ;inc r0
                                  // Infinite loop.
-                                 loop:
-000041 cfff                      	rjmp loop 
+000041 cfff                      loop: rjmp loop 
                                  
                                  
                                  //--------------------------------------------------------------------
@@ -1013,18 +1013,18 @@ AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\Assemble
                                  // Controls 7 segments outputs.
                                  // arguments: none
                                  // returns: none
-                                 // changes: r0, r1, r16, r26, r27
+                                 // changes: r0, r1, r16, r17, r18, r26, r27
                                  //--------------------------------------------------------------------
                                  ISR_TC0:
                                  	; show nothing
 000061 ef0f                      	ldi r16, 0xFF
 000062 bb0b                      	out PORTA, R16
                                  	
-000063 b205                      	in r0, PORTC ; get currenty enabled 7 seg 
+000063 b205                      	in r0, PORTC ; get currenty enabled 7 seg
 000064 d00d                      	rcall ring_counter ; calculate next 7 seg
 000065 ba05                      	out PORTC, r0 ; disable enabled 7 seg and enable next
                                  
-                                 	; read from mem based on ring counter value
+                                 	; read from mem based using ring counter value as offset
 000066 d00f                      	rcall ring_to_bcd
 000067 2d01                      	mov r16, r1
 000068 950a                      	dec r16 ; 1st number is in pos X+0, 2nd number is in pos X+1, etc.
@@ -1034,8 +1034,6 @@ AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\Assemble
                                  	; add offset to mem pointer registers.
 00006b 2711                      	clr r17 ; empty reg
 00006c 0fa0                      	add r26, r16
-                                 	// This (adc) isn't needed with the current data location and size configuration.
-                                 	// Keep it for soundness and easier future changes.
 00006d 1fb1                      	adc r27, r17
                                  
 00006e 900c                      	ld r0, X ; read data in bcd format
@@ -1090,6 +1088,7 @@ AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\Assemble
 00007e 300a                      	cpi r16, 10
 00007f f430                      	brsh bcd_to_7seg_exit ; if data >= 10 (unsigned), skip
                                  
+                                 	; get 7 segment format
 000080 e0b0                      	ldi r27, HIGH( segments_pointer ) ; pointer registers X (r26:r27)
 000081 e6a8                          ldi r26, LOW( segments_pointer )
                                  	; add offset to mem pointer registers.
