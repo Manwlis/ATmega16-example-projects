@@ -1,5 +1,5 @@
 ;
-; main.asm
+; 7_segment_driver\main.asm
 ; Driver for an 8 digits 7 segment display. Shows data from SRAM.
 ; Data space: 0x0060 to 0x0067, LSB to MSB. Legal digits: 0-9.
 ; Framerate ~60Hz per digit.
