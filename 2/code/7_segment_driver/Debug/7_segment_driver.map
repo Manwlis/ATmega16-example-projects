@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm Fri Oct 16 12:41:17 2020
+AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\7_segment_driver\main.asm Sun Oct 18 14:15:37 2020
 
 
 EQU  SIGNATURE_000 0000001e

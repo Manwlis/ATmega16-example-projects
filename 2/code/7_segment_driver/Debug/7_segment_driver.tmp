@@ -1,18 +1,18 @@
 <ASSEMBLER_INFO>
  <VERSION>2.2.7</VERSION>
  <DEVICE>"ATmega16"</DEVICE>
- <WORKING_DIR>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\Debug</WORKING_DIR>
+ <WORKING_DIR>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\7_segment_driver\Debug</WORKING_DIR>
  <INCLUDE_PATH>
   <DIR>D:/Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc</DIR>
   <DIR>D:\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
   <DIR></DIR>
  </INCLUDE_PATH>
- <SOURCE_FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</SOURCE_FILE>
+ <SOURCE_FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\7_segment_driver\main.asm</SOURCE_FILE>
  <INCLUDED_FILES>
   <FILE>D:/Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m16def.inc</FILE>
  </INCLUDED_FILES>
  <OBJECT_FILES>
-  <FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\Debug\7_segment_driver.obj</FILE>
+  <FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\7_segment_driver\Debug\7_segment_driver.obj</FILE>
  </OBJECT_FILES>
  <HEX_FILES>
   <FILE>7_segment_driver.hex</FILE>
@@ -22,16 +22,16 @@
   <FILE>7_segment_driver.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <init><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>36</LINE></init>
-  <ISR_TC0><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>147</LINE></ISR_TC0>
-  <write_7_segments><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>79</LINE></write_7_segments>
-  <write_data><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>127</LINE></write_data>
-  <loop><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>70</LINE></loop>
-  <set_data_loop><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>132</LINE></set_data_loop>
-  <ring_counter><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>182</LINE></ring_counter>
-  <ring_to_bcd><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>195</LINE></ring_to_bcd>
-  <BCD_to_7_segment_Decoder><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>213</LINE></BCD_to_7_segment_Decoder>
-  <rtb_loop><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>199</LINE></rtb_loop>
-  <bcd_to_7seg_exit><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\AssemblerApplication1\main.asm</FILE><LINE>230</LINE></bcd_to_7seg_exit>
+  <init><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\7_segment_driver\main.asm</FILE><LINE>36</LINE></init>
+  <ISR_TC0><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\7_segment_driver\main.asm</FILE><LINE>147</LINE></ISR_TC0>
+  <write_7_segments><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\7_segment_driver\main.asm</FILE><LINE>79</LINE></write_7_segments>
+  <write_data><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\7_segment_driver\main.asm</FILE><LINE>127</LINE></write_data>
+  <loop><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\7_segment_driver\main.asm</FILE><LINE>70</LINE></loop>
+  <set_data_loop><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\7_segment_driver\main.asm</FILE><LINE>132</LINE></set_data_loop>
+  <ring_counter><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\7_segment_driver\main.asm</FILE><LINE>182</LINE></ring_counter>
+  <ring_to_bcd><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\7_segment_driver\main.asm</FILE><LINE>195</LINE></ring_to_bcd>
+  <BCD_to_7_segment_Decoder><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\7_segment_driver\main.asm</FILE><LINE>213</LINE></BCD_to_7_segment_Decoder>
+  <rtb_loop><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\7_segment_driver\main.asm</FILE><LINE>199</LINE></rtb_loop>
+  <bcd_to_7seg_exit><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\2\code\7_segment_driver\main.asm</FILE><LINE>230</LINE></bcd_to_7seg_exit>
  </LABELS>
 </ASSEMBLER_INFO>
