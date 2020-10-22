@@ -94,27 +94,34 @@ not_LF:
 	
 USART_Transmit:
 	; Wait for empty transmit buffer
-	sbis UCSRA,UDRE
+	sbis UCSRA, UDRE
 	rjmp USART_Transmit
 	ldi r16, 0x41
+	out UDR,r16
+	; Transmiter's UDR is write-only and can't be read by the simulator.
+	; Also only I/O registers can be logged so r16 can't be used for logging purposes.
+	; TCNT2 is used for logging.
 	out TCNT2,r16
 
 	a:
-	sbis UCSRA,UDRE
+	sbis UCSRA, UDRE
 	rjmp a
 	ldi r16, 0x54
+	out UDR,r16
 	out TCNT2,r16
 
 	b:
-	sbis UCSRA,UDRE
+	sbis UCSRA, UDRE
 	rjmp b
 	ldi r16, 0x0D
+	out UDR,r16
 	out TCNT2,r16
 
 	c:
-	sbis UCSRA,UDRE
+	sbis UCSRA, UDRE
 	rjmp c
 	ldi r16, 0x0A
+	out UDR,r16
 	out TCNT2,r16
 
 	ret

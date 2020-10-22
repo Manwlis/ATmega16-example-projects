@@ -44,9 +44,9 @@
   <not_CR><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>76</LINE></not_CR>
   <not_LF><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>82</LINE></not_LF>
   <USART_Transmit><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>95</LINE></USART_Transmit>
-  <a><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>102</LINE></a>
-  <b><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>108</LINE></b>
-  <c><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>114</LINE></c>
+  <a><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>103</LINE></a>
+  <b><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>110</LINE></b>
+  <c><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>117</LINE></c>
   <main_program><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\main.asm</FILE><LINE>52</LINE></main_program>
  </LABELS>
 </ASSEMBLER_INFO>

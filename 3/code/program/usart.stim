@@ -1,5 +1,5 @@
 $log TCNT2
-$startlog lab3.log
+$startlog lab.log
 
 R15 = 0x43
 UCSRA = 0b10000000
@@ -10,7 +10,5 @@ UCSRA = 0b10000000
 UCSRA = 0b10000000
 R15 = 0x0A
 
-$log TCNT2
-$startlog lab3.log
-#10000
+#40000
 $stoplog

@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\main.asm Thu Oct 22 20:26:19 2020
+AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\main.asm Thu Oct 22 23:39:13 2020
 
 
 EQU  SIGNATURE_000 0000001e
@@ -604,7 +604,7 @@ EQU  INT2addr     00000024
 EQU  OC0addr      00000026
 EQU  SPMRaddr     00000028
 EQU  INT_VECTORS_SIZE 0000002a
-CSEG init         000000c6
+CSEG init         000000ca
 CSEG ISR_URXC     0000009e
 CSEG ISR_TC0      0000005f
 EQU  OCR_value    0000004d
@@ -629,7 +629,7 @@ CSEG not_N        000000aa
 CSEG not_CR       000000ad
 CSEG not_LF       000000b1
 CSEG USART_Transmit 000000b5
-CSEG a            000000b9
-CSEG b            000000bd
-CSEG c            000000c1
-CSEG main_program 000000cd
+CSEG a            000000ba
+CSEG b            000000bf
+CSEG c            000000c4
+CSEG main_program 000000d1
