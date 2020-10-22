@@ -15,14 +15,14 @@
 //--------------------------------------------------------------------
 
 
-.equ data_pointer = 0x0060 ; position of SRAM used to store data
-
 
 ; Reset and Interrupt vectors
 .org $000
 rjmp init ; Start from initialization routine
+.org $016
+rjmp ISR_URXC ; ISR for USART receive completed.
 .org $026
-rjmp ISR_TC0
+rjmp ISR_TC0 ; ISR for timer/counter0 compare match mode.
 
 
 ; code segment
@@ -30,10 +30,11 @@ rjmp ISR_TC0
 
 // code from includes is moved here by the assembler
 .include "7_segment_driver.asm"
+.include "USART_driver.asm"
 
 //--------------------------------------------------------------------
 // Main initialization routine
-// Runs once at program startup. Sets SP, RAM, ports and interrupts
+// Runs once at program startup. Sets SP, drivers and enables interrupts.
 //--------------------------------------------------------------------
 init:
 	; Set stack pointer so program returns from interrupt where it occurred
@@ -43,9 +44,10 @@ init:
 	out SPL,r16 ; to stack pointer
 
 	rcall init_7_seg_driver
+	rcall init_USART_driver
 
 	; Enable interrupts
 	sei
-
 // Infinite loop. Main program
-main_program: rjmp main_program 
+main_program:
+rjmp main_program 

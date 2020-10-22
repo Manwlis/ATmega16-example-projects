@@ -1,0 +1,8 @@
+#4029
+TCNT2 = 0x41
+#4
+TCNT2 = 0x54
+#4
+TCNT2 = 0x0d
+#4
+TCNT2 = 0x0a

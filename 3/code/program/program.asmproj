@@ -53,6 +53,7 @@
       </ToolNumber>
       <ToolName xmlns="">Simulator</ToolName>
     </com_atmel_avrdbg_tool_simulator>
+    <StimuliFile>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\usart.stim</StimuliFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <ToolchainSettings>
@@ -81,6 +82,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="7_segment_driver.asm">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="USART_driver.asm">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="main.asm">

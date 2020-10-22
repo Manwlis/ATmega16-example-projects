@@ -11,13 +11,14 @@
 
 
 .equ OCR_value = 77 ; Compare register value
+; internal SRAM starts at 0x0060
+.equ data_pointer = 0x0060 ; position of SRAM used to store data
 .equ segments_pointer = 0x0068 ; position of SRAM used to store 7 segments encodings
 .equ num_of_data = 8 ;
-.equ offset = 1 ; value of first data
 
 
 //--------------------------------------------------------------------
-// Save in SRAM numbers 0-9 in 7 segment format.
+// Initialize memory, ports and timer that are used by the driver.
 // arguments: none
 // returns: none
 // changes: r16, r28, r29
@@ -27,7 +28,7 @@ init_7_seg_driver:
 	; save encoding
 	call write_7_segments
 	; set output
-	call init_mem
+	call clr_7seg_data
 	
 	; Set Ports A and C as outputs and init
 	ldi r16, 0xFF
@@ -38,7 +39,7 @@ init_7_seg_driver:
 	out PORTC, R16
 
 	; Set Timer0 at ~2ms
-	ldi r16,(1<<CS02)|(1<<WGM01)
+	ldi r16,( 1 << CS02 ) | ( 1 << WGM01 )
 	out TCCR0,r16 ; Timer clock = system clock / 64. Clear counter on match.
 	ldi r16,1<<TOV0
 	out TIFR,r16 ; Clear TOV0/ clear pending interrupts
@@ -94,7 +95,7 @@ write_7_segments:
 // returns: none
 // changes: r16, r26, r27
 //--------------------------------------------------------------------
-init_mem:
+clr_7seg_data:
 	; Set memory pointer 
 	ldi r27, HIGH( data_pointer ) ; pointer registers X (r26:r27)
     ldi r26, LOW( data_pointer )
@@ -203,3 +204,34 @@ BCD_to_7_segment_Decoder:
 bcd_to_7seg_exit:
 	mov r1, r17
 	ret
+
+
+//--------------------------------------------------------------------
+// Saves a bcd in the first position of drivers data mem.
+// Moves all ohter data one position forward. Last element gets discarded.
+// arguments: input in r0
+// returns: none
+// changes: r16, r17, r26, r27
+//--------------------------------------------------------------------
+save_to_7seg_data:
+
+	ldi r27, HIGH( data_pointer ) ; pointer registers X (r26:r27)
+    ldi r26, LOW( data_pointer )
+	adiw X, num_of_data - 2 ; pos of the second from last element.
+	ldi r16, num_of_data - 1 ; loop iterations. -1 because the last element will be discarded.
+
+	; Move all pre-existing data one position up. Top one gets discarded.
+move_up_loop:
+	ld r17, X+ ; Read element. Post increment to get the pos where it will be stored.
+	st X, r17 ; Save it.
+	sbiw X, 2 ; Next element.
+	
+	dec r16
+	brne move_up_loop
+
+	ldi r27, HIGH( data_pointer ) ; new data get saved in first position
+    ldi r26, LOW( data_pointer )
+	st X, r0
+
+	ret
+
