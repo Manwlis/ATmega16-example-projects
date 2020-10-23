@@ -21,6 +21,8 @@
 rjmp init ; Start from initialization routine
 .org $016
 rjmp ISR_URXC ; ISR for USART receive completed.
+.org $018
+rjmp ISR_UDRE
 .org $026
 rjmp ISR_TC0 ; ISR for timer/counter0 compare match mode.
 

@@ -24,8 +24,9 @@
   <FILE>program.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <init><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\main.asm</FILE><LINE>39</LINE></init>
-  <ISR_URXC><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>53</LINE></ISR_URXC>
+  <init><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\main.asm</FILE><LINE>41</LINE></init>
+  <ISR_URXC><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>72</LINE></ISR_URXC>
+  <ISR_UDRE><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>140</LINE></ISR_UDRE>
   <ISR_TC0><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\7_segment_driver.asm</FILE><LINE>119</LINE></ISR_TC0>
   <init_7_seg_driver><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\7_segment_driver.asm</FILE><LINE>26</LINE></init_7_seg_driver>
   <write_7_segments><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\7_segment_driver.asm</FILE><LINE>60</LINE></write_7_segments>
@@ -38,15 +39,19 @@
   <bcd_to_7seg_exit><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\7_segment_driver.asm</FILE><LINE>204</LINE></bcd_to_7seg_exit>
   <save_to_7seg_data><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\7_segment_driver.asm</FILE><LINE>216</LINE></save_to_7seg_data>
   <move_up_loop><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\7_segment_driver.asm</FILE><LINE>224</LINE></move_up_loop>
-  <init_USART_driver><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>20</LINE></init_USART_driver>
-  <not_C><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>65</LINE></not_C>
-  <not_N><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>71</LINE></not_N>
-  <not_CR><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>76</LINE></not_CR>
-  <not_LF><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>82</LINE></not_LF>
-  <USART_Transmit><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>95</LINE></USART_Transmit>
-  <a><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>103</LINE></a>
-  <b><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>110</LINE></b>
-  <c><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>117</LINE></c>
-  <main_program><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\main.asm</FILE><LINE>52</LINE></main_program>
+  <init_USART_driver><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>31</LINE></init_USART_driver>
+  <frame_C_N><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>91</LINE></frame_C_N>
+  <frame_CR><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>95</LINE></frame_CR>
+  <frame_LF><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>98</LINE></frame_LF>
+  <frame_number><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>107</LINE></frame_number>
+  <exit_ISR_URXC><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>113</LINE></exit_ISR_URXC>
+  <USART_Transmit><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>117</LINE></USART_Transmit>
+  <prv_state_none><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>157</LINE></prv_state_none>
+  <prv_state_O><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>173</LINE></prv_state_O>
+  <prv_state_K><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>182</LINE></prv_state_K>
+  <prv_state_CR><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>191</LINE></prv_state_CR>
+  <prv_state_LF><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>200</LINE></prv_state_LF>
+  <ISR_UDRE_exit><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\USART_driver.asm</FILE><LINE>212</LINE></ISR_UDRE_exit>
+  <main_program><FILE>C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\main.asm</FILE><LINE>54</LINE></main_program>
  </LABELS>
 </ASSEMBLER_INFO>
