@@ -22,7 +22,7 @@ rjmp init ; Start from initialization routine
 .org $016
 rjmp ISR_URXC ; ISR for USART receive completed.
 .org $018
-rjmp ISR_UDRE
+rjmp ISR_UDRE ; ISR for empty transmitter's buffer.
 .org $026
 rjmp ISR_TC0 ; ISR for timer/counter0 compare match mode.
 
@@ -49,7 +49,11 @@ init:
 	rcall init_USART_driver
 
 	; Enable interrupts
-	sei
-// Infinite loop. Main program
+	sei ; breakpoint here to execute Stimulifile
+
+//--------------------------------------------------------------------
+// Infinite loop. Main program.
+// Nothing happens here, functionality is served in interrupt service routines.
+//--------------------------------------------------------------------
 main_program:
 rjmp main_program 

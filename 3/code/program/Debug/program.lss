@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\main.asm Fri Oct 23 20:42:44 2020
+AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\main.asm Sat Oct 24 19:54:02 2020
 
 [builtin](2): Including file 'D:/Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\avrasm\inc\m16def.inc'
 C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\main.asm(34): Including file 'C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\7_segment_driver.asm'
@@ -893,11 +893,11 @@ C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\main.asm(35): Inclu
                                  
                                  ; Reset and Interrupt vectors
                                  .org $000
-000000 c0f6                      rjmp init ; Start from initialization routine
+000000 c0f4                      rjmp init ; Start from initialization routine
                                  .org $016
 000016 c08d                      rjmp ISR_URXC ; ISR for USART receive completed.
                                  .org $018
-000018 c0ac                      rjmp ISR_UDRE
+000018 c0aa                      rjmp ISR_UDRE ; ISR for empty transmitter's buffer.
                                  .org $026
 000026 c038                      rjmp ISR_TC0 ; ISR for timer/counter0 compare match mode.
                                  
@@ -1117,8 +1117,8 @@ C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\main.asm(35): Inclu
                                  
                                  //--------------------------------------------------------------------
                                  // Saves a bcd in the first position of drivers data mem.
-                                 // Moves all ohter data one position forward. Last element gets discarded.
-                                 // arguments: input in r0
+                                 // Moves all old data one position forward. Last element gets discarded.
+                                 // arguments: input character in r0
                                  // returns: none
                                  // changes: r16, r17, r26, r27
                                  //--------------------------------------------------------------------
@@ -1199,7 +1199,7 @@ C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\main.asm(35): Inclu
 00009b e806                      	ldi r16, ( 1 << URSEL ) | ( 1 << UCSZ1 ) | ( 1 << UCSZ0 )
 00009c bd00                      	out UCSRC, r16
                                  
-                                 	; initialize transmitters FSM to neutral state and num of remaining transmittions to 0.
+                                 	; initialize transmitter's FSM to neutral state and num of remaining transmittions to 0.
 00009d ef0f                      	ldi r16, none
 00009e 9300 0073                 	sts transmiter_status_pointer, r16
 0000a0 2700                      	clr r16
@@ -1210,7 +1210,7 @@ C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\main.asm(35): Inclu
                                  
                                  //--------------------------------------------------------------------
                                  // Interrupt service routine for USART receive completed.
-                                 // Transmition is errorless so previous inputs are irrelevant and a state-machine isn't needed.
+                                 // Transmition is errorless and previous/next inputs/states are irrelevant so a state-machine isn't needed.
                                  // Only the current input is needed to take the appropiate action.
                                  // arguments: none
                                  // returns: none
@@ -1225,55 +1225,44 @@ C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\main.asm(35): Inclu
 0000a7 2f10                      	mov r17, r16 ; r16 change values in subroutines and need a reg with immediate capabilities.
                                  
 0000a8 3413                      	cpi r17, 0x43 ; check if C
-0000a9 f039                      	breq frame_C_N
+0000a9 f059                      	breq frame_C_N
 0000aa 341e                      	cpi r17, 0x4E ; check if N
-0000ab f029                      	breq frame_C_N
-0000ac 301d                      	cpi r17, 0x0D ; check if <CR>
-0000ad f029                      	breq frame_CR
-0000ae 301a                      	cpi r17, 0x0A ; check if <LF>
-0000af f021                      	breq frame_LF
+0000ab f049                      	breq frame_C_N
+0000ac 3411                      	cpi r17, 0x41 ; check if A
+0000ad f049                      	breq frame_A_T_CR
+0000ae 3514                      	cpi r17, 0x54 ; check if T
+0000af f039                      	breq frame_A_T_CR
+0000b0 301d                      	cpi r17, 0x0D ; check if <CR>
+0000b1 f029                      	breq frame_A_T_CR
+0000b2 301a                      	cpi r17, 0x0A ; check if <LF>
+0000b3 f021                      	breq frame_LF
                                  	; if program reach here, frame is a character ( transmition is errorless )
-0000b0 c00a                      	rjmp frame_number
+0000b4 c00a                      	rjmp frame_number
                                  	
                                  frame_C_N:
-0000b1 dfa4                      	rcall clr_7seg_data
-0000b2 c00b                      	rjmp exit_ISR_URXC
+0000b5 dfa0                      	rcall clr_7seg_data
+0000b6 c00b                      	rjmp exit_ISR_URXC
                                  
-                                 frame_CR:
-0000b3 c00a                      	rjmp exit_ISR_URXC
+                                 frame_A_T_CR:
+0000b7 c00a                      	rjmp exit_ISR_URXC
                                  
                                  frame_LF:
                                  	; increase the number of responces left
-0000b4 9100 0074                 	lds r16, num_transmittion_left
-0000b6 9503                      	inc r16 ; if >= 256 responses pile up, oopsie. It isn't expected to happen during normal operation.
-0000b7 9300 0074                 	sts num_transmittion_left, r16
+0000b8 9100 0074                 	lds r16, num_transmittion_left
+0000ba 9503                      	inc r16 ; if >= 256 responses pile up, oopsie. It isn't expected to happen during normal operation.
+0000bb 9300 0074                 	sts num_transmittion_left, r16
                                  	; enable transmitter interrupts to start the response. If it is already enabled, nothing changes.
-0000b9 9a55                      	sbi UCSRB, UDRIE
-0000ba c003                      	rjmp exit_ISR_URXC
+0000bd 9a55                      	sbi UCSRB, UDRIE
+0000be c003                      	rjmp exit_ISR_URXC
                                  
                                  frame_number:
                                  	; send data to bcd
-0000bb 701f                      	andi r17, 0x0F ; clears top half byte, ascii -> bcd
-0000bc 2e01                      	mov r0, r17
-0000bd dfc8                      	rcall save_to_7seg_data ; save bcd it in SRAM
+0000bf 701f                      	andi r17, 0x0F ; clears top half byte, ascii -> bcd
+0000c0 2e01                      	mov r0, r17
+0000c1 dfc4                      	rcall save_to_7seg_data ; save bcd it in SRAM
                                  
                                  exit_ISR_URXC:
-0000be 9518                      	reti
-                                 
-                                 	
-                                 USART_Transmit:
-                                 	; Wait for empty transmit buffer
-0000bf 9b5d                      	sbis UCSRA, UDRE
-0000c0 cffe                      	rjmp USART_Transmit
-0000c1 e401                      	ldi r16, 0x41
-0000c2 b90c                      	out UDR,r16
-                                 	; Transmiter's UDR is write-only and can't be read by the simulator.
-                                 	; Also only I/O registers can be logged so r16 can't be used for logging purposes.
-                                 	; TCNT2 is used for logging.
-0000c3 bd04                      	out TCNT2,r16
-                                 
-                                 
-0000c4 9508                      	ret
+0000c2 9518                      	reti
                                  
                                  
                                  //--------------------------------------------------------------------
@@ -1287,78 +1276,77 @@ C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\main.asm(35): Inclu
                                  ISR_UDRE:
                                  
                                  	; read old state
-0000c5 9100 0073                 	lds r16, transmiter_status_pointer
+0000c3 9100 0073                 	lds r16, transmiter_status_pointer
                                  	; check state
-0000c7 3f0f                      	cpi r16, none
-0000c8 f041                      	breq prv_state_none
-0000c9 340f                      	cpi r16, O
-0000ca f089                      	breq prv_state_O
-0000cb 340b                      	cpi r16, K
-0000cc f0a9                      	breq prv_state_K
-0000cd 300d                      	cpi r16, CR
-0000ce f0c9                      	breq prv_state_CR
-0000cf 300a                      	cpi r16, LF
-0000d0 f0e9                      	breq prv_state_LF
+0000c5 3f0f                      	cpi r16, none
+0000c6 f041                      	breq prv_state_none
+0000c7 340f                      	cpi r16, O
+0000c8 f089                      	breq prv_state_O
+0000c9 340b                      	cpi r16, K
+0000ca f0a9                      	breq prv_state_K
+0000cb 300d                      	cpi r16, CR
+0000cc f0c9                      	breq prv_state_CR
+0000cd 300a                      	cpi r16, LF
+0000ce f0e9                      	breq prv_state_LF
                                  
                                  ; new state
                                  prv_state_none:
                                  	; decrease the number of responces left
-0000d1 9100 0074                 	lds r16, num_transmittion_left
-0000d3 950a                      	dec r16
-0000d4 9300 0074                 	sts num_transmittion_left, r16
+0000cf 9100 0074                 	lds r16, num_transmittion_left
+0000d1 950a                      	dec r16
+0000d2 9300 0074                 	sts num_transmittion_left, r16
                                  	; change state
-0000d6 e40f                      	ldi r16, O
-0000d7 9300 0073                 	sts transmiter_status_pointer, r16
+0000d4 e40f                      	ldi r16, O
+0000d5 9300 0073                 	sts transmiter_status_pointer, r16
                                  	; send character. The character is the state.
-0000d9 b90c                      	out UDR,r16
+0000d7 b90c                      	out UDR,r16
                                  	; Transmiter's UDR is write-only and can't be read by the simulator.
                                  	; Also only I/O registers can be logged so r16 can't be used for logging purposes.
                                  	; TCNT2 is used for logging.
-0000da bd04                      	out TCNT2,r16
-0000db c01a                      	rjmp ISR_UDRE_exit
+0000d8 bd04                      	out TCNT2,r16
+0000d9 c01a                      	rjmp ISR_UDRE_exit
                                  
                                  prv_state_O:
                                  	; change state
-0000dc e40b                      	ldi r16, K
-0000dd 9300 0073                 	sts transmiter_status_pointer, r16
+0000da e40b                      	ldi r16, K
+0000db 9300 0073                 	sts transmiter_status_pointer, r16
                                  	; send character. The character is the state.
-0000df b90c                      	out UDR,r16
-0000e0 bd04                      	out TCNT2,r16
-0000e1 c014                      	rjmp ISR_UDRE_exit
+0000dd b90c                      	out UDR,r16
+0000de bd04                      	out TCNT2,r16
+0000df c014                      	rjmp ISR_UDRE_exit
                                  
                                  prv_state_K:
                                  	; change state
-0000e2 e00d                      	ldi r16, CR
-0000e3 9300 0073                 	sts transmiter_status_pointer, r16
+0000e0 e00d                      	ldi r16, CR
+0000e1 9300 0073                 	sts transmiter_status_pointer, r16
                                  	; send character. The character is the state.
-0000e5 b90c                      	out UDR,r16
-0000e6 bd04                      	out TCNT2,r16
-0000e7 c00e                      	rjmp ISR_UDRE_exit
+0000e3 b90c                      	out UDR,r16
+0000e4 bd04                      	out TCNT2,r16
+0000e5 c00e                      	rjmp ISR_UDRE_exit
                                  
                                  prv_state_CR:
                                  	; change state
-0000e8 e00a                      	ldi r16, LF
-0000e9 9300 0073                 	sts transmiter_status_pointer, r16
+0000e6 e00a                      	ldi r16, LF
+0000e7 9300 0073                 	sts transmiter_status_pointer, r16
                                  	; send character. The character is the state.
-0000eb b90c                      	out UDR,r16
-0000ec bd04                      	out TCNT2,r16
-0000ed c008                      	rjmp ISR_UDRE_exit
+0000e9 b90c                      	out UDR,r16
+0000ea bd04                      	out TCNT2,r16
+0000eb c008                      	rjmp ISR_UDRE_exit
                                  
                                  prv_state_LF:
                                  	; change state
-0000ee ef0f                      	ldi r16, none
-0000ef 9300 0073                 	sts transmiter_status_pointer, r16
+0000ec ef0f                      	ldi r16, none
+0000ed 9300 0073                 	sts transmiter_status_pointer, r16
                                  	; if no more transmittion required, disable transmitter interrupts.
-0000f1 9100 0074                 	lds r16, num_transmittion_left
-0000f3 3000                      	cpi r16, 0
-0000f4 f409                      	brne ISR_UDRE_exit
+0000ef 9100 0074                 	lds r16, num_transmittion_left
+0000f1 3000                      	cpi r16, 0
+0000f2 f409                      	brne ISR_UDRE_exit
                                  	; disable interrupt
-0000f5 9855                      	cbi UCSRB, UDRIE
+0000f3 9855                      	cbi UCSRB, UDRIE
                                  
                                  	; exit
                                  ISR_UDRE_exit:
-0000f6 9518                      	reti
-                                 
+0000f4 9518                      	reti
                                  
                                  //--------------------------------------------------------------------
                                  // Main initialization routine
@@ -1366,19 +1354,23 @@ C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\main.asm(35): Inclu
                                  //--------------------------------------------------------------------
                                  init:
                                  	; Set stack pointer so program returns from interrupt where it occurred
-0000f7 e004                      	ldi r16, HIGH( RAMEND ) ; Upper byte
-0000f8 bf0e                      	out SPH,r16 ; to stack pointer
-0000f9 e50f                      	ldi r16, LOW( RAMEND ) ; Lower byte
-0000fa bf0d                      	out SPL,r16 ; to stack pointer
+0000f5 e004                      	ldi r16, HIGH( RAMEND ) ; Upper byte
+0000f6 bf0e                      	out SPH,r16 ; to stack pointer
+0000f7 e50f                      	ldi r16, LOW( RAMEND ) ; Lower byte
+0000f8 bf0d                      	out SPL,r16 ; to stack pointer
                                  
-0000fb df2e                      	rcall init_7_seg_driver
-0000fc df96                      	rcall init_USART_driver
+0000f9 df30                      	rcall init_7_seg_driver
+0000fa df98                      	rcall init_USART_driver
                                  
                                  	; Enable interrupts
-0000fd 9478                      	sei
-                                 // Infinite loop. Main program
+0000fb 9478                      	sei ; breakpoint here to execute Stimulifile
+                                 
+                                 //--------------------------------------------------------------------
+                                 // Infinite loop. Main program.
+                                 // Nothing happens here, functionality is served in interrupt service routines.
+                                 //--------------------------------------------------------------------
                                  main_program:
-0000fe cfff                      rjmp main_program 
+0000fc cfff                      rjmp main_program 
 
 
 RESOURCE USE INFORMATION
@@ -1398,7 +1390,7 @@ counted separately from r26..r31 here.
 "ATmega16" register use summary:
 x  :   8 y  :  11 z  :   0 r0 :   9 r1 :   5 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   1 r16: 108 r17:  16 r18:   2 r19:   0 r20:   0 
+r13:   0 r14:   0 r15:   1 r16: 105 r17:  18 r18:   2 r19:   0 r20:   0 
 r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   7 r27:   7 r28:   1 
 r29:   1 r30:   0 r31:   0 
 Registers used: 12 out of 35 (34.3%)
@@ -1406,29 +1398,29 @@ Registers used: 12 out of 35 (34.3%)
 "ATmega16" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   3 add   :   2 adiw  :   1 and   :   0 
 andi  :   1 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
-brcc  :   0 brcs  :   0 break :   0 breq  :   9 brge  :   0 brhc  :   0 
+brcc  :   0 brcs  :   0 break :   0 breq  :  11 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
 brne  :   4 brpl  :   0 brsh  :   1 brtc  :   0 brts  :   0 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   2 cbi   :   2 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   6 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :  12 cpse  :   0 dec   :   3 eor   :   0 fmul  :   0 fmuls :   0 
+cpi   :  14 cpse  :   0 dec   :   3 eor   :   0 fmul  :   0 fmuls :   0 
 fmulsu:   0 icall :   0 ijmp  :   0 in    :   3 inc   :   3 jmp   :   0 
-ld    :   3 ldd   :   0 ldi   :  46 lds   :   4 lpm   :   0 lsl   :   1 
+ld    :   3 ldd   :   0 ldi   :  45 lds   :   4 lpm   :   0 lsl   :   1 
 lsr   :   1 mov   :   7 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :  27 pop   :   0 
-push  :   0 rcall :   7 ret   :   9 reti  :   3 rjmp  :  14 rol   :   0 
-ror   :   0 sbc   :   0 sbci  :   0 sbi   :   2 sbic  :   0 sbis  :   1 
+neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :  25 pop   :   0 
+push  :   0 rcall :   7 ret   :   8 reti  :   3 rjmp  :  13 rol   :   0 
+ror   :   0 sbc   :   0 sbci  :   0 sbi   :   2 sbic  :   0 sbis  :   0 
 sbiw  :   1 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
 sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
 sez   :   0 sleep :   0 spm   :   0 st    :   3 std   :  11 sts   :   9 
 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 32 out of 113 (28.3%)
+Instructions used: 31 out of 113 (27.4%)
 
 "ATmega16" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0001fe    434      0    434   16384   2.6%
+[.cseg] 0x000000 0x0001fa    430      0    430   16384   2.6%
 [.dseg] 0x000060 0x000060      0      0      0    1024   0.0%
 [.eseg] 0x000000 0x000000      0      0      0     512   0.0%
 

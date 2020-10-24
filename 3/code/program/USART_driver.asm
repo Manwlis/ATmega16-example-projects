@@ -63,7 +63,7 @@ init_USART_driver:
 
 //--------------------------------------------------------------------
 // Interrupt service routine for USART receive completed.
-// Transmition is errorless so previous inputs are irrelevant and a state-machine isn't needed.
+// Transmition is errorless and previous/next inputs/states are irrelevant so a state-machine isn't needed.
 // Only the current input is needed to take the appropiate action.
 // arguments: none
 // returns: none
@@ -81,8 +81,12 @@ ISR_URXC:
 	breq frame_C_N
 	cpi r17, 0x4E ; check if N
 	breq frame_C_N
+	cpi r17, 0x41 ; check if A
+	breq frame_A_T_CR
+	cpi r17, 0x54 ; check if T
+	breq frame_A_T_CR
 	cpi r17, 0x0D ; check if <CR>
-	breq frame_CR
+	breq frame_A_T_CR
 	cpi r17, 0x0A ; check if <LF>
 	breq frame_LF
 	; if program reach here, frame is a character ( transmition is errorless )
@@ -92,7 +96,7 @@ frame_C_N:
 	rcall clr_7seg_data
 	rjmp exit_ISR_URXC
 
-frame_CR:
+frame_A_T_CR:
 	rjmp exit_ISR_URXC
 
 frame_LF:
@@ -196,4 +200,3 @@ prv_state_LF:
 	; exit
 ISR_UDRE_exit:
 	reti
-

@@ -208,8 +208,8 @@ bcd_to_7seg_exit:
 
 //--------------------------------------------------------------------
 // Saves a bcd in the first position of drivers data mem.
-// Moves all ohter data one position forward. Last element gets discarded.
-// arguments: input in r0
+// Moves all old data one position forward. Last element gets discarded.
+// arguments: input character in r0
 // returns: none
 // changes: r16, r17, r26, r27
 //--------------------------------------------------------------------

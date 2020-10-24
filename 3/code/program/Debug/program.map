@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\main.asm Fri Oct 23 20:42:44 2020
+AVRASM ver. 2.2.7  C:\Users\Manolis\Documents\GitHub\HRY411-labs\3\code\program\main.asm Sat Oct 24 19:54:02 2020
 
 
 EQU  SIGNATURE_000 0000001e
@@ -604,9 +604,9 @@ EQU  INT2addr     00000024
 EQU  OC0addr      00000026
 EQU  SPMRaddr     00000028
 EQU  INT_VECTORS_SIZE 0000002a
-CSEG init         000000f7
+CSEG init         000000f5
 CSEG ISR_URXC     000000a4
-CSEG ISR_UDRE     000000c5
+CSEG ISR_UDRE     000000c3
 CSEG ISR_TC0      0000005f
 EQU  OCR_value    0000004d
 EQU  data_pointer 00000060
@@ -632,16 +632,15 @@ EQU  K            0000004b
 EQU  CR           0000000d
 EQU  LF           0000000a
 CSEG init_USART_driver 00000093
-CSEG frame_C_N    000000b1
-CSEG frame_CR     000000b3
-CSEG frame_LF     000000b4
-CSEG frame_number 000000bb
-CSEG exit_ISR_URXC 000000be
-CSEG USART_Transmit 000000bf
-CSEG prv_state_none 000000d1
-CSEG prv_state_O  000000dc
-CSEG prv_state_K  000000e2
-CSEG prv_state_CR 000000e8
-CSEG prv_state_LF 000000ee
-CSEG ISR_UDRE_exit 000000f6
-CSEG main_program 000000fe
+CSEG frame_C_N    000000b5
+CSEG frame_A_T_CR 000000b7
+CSEG frame_LF     000000b8
+CSEG frame_number 000000bf
+CSEG exit_ISR_URXC 000000c2
+CSEG prv_state_none 000000cf
+CSEG prv_state_O  000000da
+CSEG prv_state_K  000000e0
+CSEG prv_state_CR 000000e6
+CSEG prv_state_LF 000000ec
+CSEG ISR_UDRE_exit 000000f4
+CSEG main_program 000000fc
