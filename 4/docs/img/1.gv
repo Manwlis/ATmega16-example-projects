@@ -1,0 +1,79 @@
+// dot -Tpng 1.gv -o 1.png
+
+digraph H
+{
+	node [shape=record];
+
+	rankdir=TB;
+	ranksep =0.1;
+
+	nd_0   [label = "Call Initializations" fixedsize=true width=2 height=1];
+	nd_1   [label = "Main Loop" fixedsize=true width=2 height=1];
+
+	nd_2   [label = "Initialize 7 Seg" fixedsize=true width=2 height=1];
+	nd_3   [label = "Interrupt Service" fixedsize=true width=2 height=1];
+
+	nd_4   [label = "Initialize USART" fixedsize=true width=2 height=1];
+	nd_5   [label = "Interrupt Service" fixedsize=true width=2 height=1];
+
+
+	nd_10   [label = "Initialize 7 Seg" fixedsize=true width=2 height=0.5];
+	nd_11   [label = "Initialize USART" fixedsize=true width=2 height=0.5];
+	nd_12   [label = "Main Loop" fixedsize=true width=2 height=1];
+
+	nd_13   [label = "Interrupt Service" fixedsize=true width=2 height=1];
+
+	nd_14   [label = "Interrupt Service" fixedsize=true width=2 height=1];
+
+	subgraph cluster_old
+	{
+		label = "Lab 3 Code Structure";
+
+		subgraph cluster_old_program
+		{
+			label = "program.asm";
+			{rank= source; nd_0;}
+			{rank= same; nd_1;}
+		}
+
+		subgraph cluster_old_7_segment_driver
+		{
+			label = "7_segment_driver.asm";
+			{rank= source; nd_2;}
+			{rank= same; nd_3;}
+		}
+
+		subgraph cluster_old_USART_driver
+		{
+			label = "USART_driver.asm";
+			{rank= source; nd_4;}
+			{rank= same; nd_5;}
+		}
+	}
+
+	subgraph cluster_new
+	{
+		label = "Lab 4 Code Structure";
+
+		subgraph cluster_new_program
+		{
+			rank = "source";
+			label = "program.c";
+			{rank= source; nd_10;}
+			{rank= same; nd_11;}
+			{rank= max; nd_12;}
+		}
+
+		subgraph cluster_new_7_segment_driver
+		{
+			label = "7_segment_driver.S";
+			{rank= same; nd_13;}
+		}
+
+		subgraph cluster_new_USART_driver
+		{
+			label = "USART_driver.S";
+			{rank= source; nd_14;}
+		}
+	}
+}

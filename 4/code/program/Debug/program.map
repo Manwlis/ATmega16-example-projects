@@ -382,19 +382,19 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0x7d3
+.debug_info     0x00000000      0x7ad
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x52e D:/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.3.300/gcc/dev/atmega16/avr5/crtatmega16.o
  .debug_info    0x0000052e       0x7d USART_driver.o
  .debug_info    0x000005ab       0x81 7_segment_driver.o
- .debug_info    0x0000062c      0x1a7 program.o
+ .debug_info    0x0000062c      0x181 program.o
 
-.debug_abbrev   0x00000000      0x612
+.debug_abbrev   0x00000000      0x5fa
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x4e7 D:/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.3.300/gcc/dev/atmega16/avr5/crtatmega16.o
  .debug_abbrev  0x000004e7       0x14 USART_driver.o
  .debug_abbrev  0x000004fb       0x14 7_segment_driver.o
- .debug_abbrev  0x0000050f      0x103 program.o
+ .debug_abbrev  0x0000050f       0xeb program.o
 
 .debug_line     0x00000000      0x620
  *(.debug_line .debug_line.* .debug_line_end)

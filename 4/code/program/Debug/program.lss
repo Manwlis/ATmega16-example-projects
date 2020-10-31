@@ -15,19 +15,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   5 .debug_aranges 00000070  00000000  00000000  00000308  2**3
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   000007d3  00000000  00000000  00000378  2**0
+  6 .debug_info   000007ad  00000000  00000000  00000378  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000612  00000000  00000000  00000b4b  2**0
+  7 .debug_abbrev 000005fa  00000000  00000000  00000b25  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000620  00000000  00000000  0000115d  2**0
+  8 .debug_line   00000620  00000000  00000000  0000111f  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000054  00000000  00000000  00001780  2**2
+  9 .debug_frame  00000054  00000000  00000000  00001740  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000356  00000000  00000000  000017d4  2**0
+ 10 .debug_str    00000356  00000000  00000000  00001794  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    0000007f  00000000  00000000  00001b2a  2**0
+ 11 .debug_loc    0000007f  00000000  00000000  00001aea  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000020  00000000  00000000  00001ba9  2**0
+ 12 .debug_ranges 00000020  00000000  00000000  00001b69  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -636,10 +636,10 @@ int main()
 	// Enable global interrupts
 	sei();
  216:	78 94       	sei
-	
     while(1) 
     {
-		// Debugger doesn't really like empty while loops.
+		// Visual debugger doesn't really like empty while loops.
+		// It shows that the loop loops at the previous line.
 		// Volatile so compiler doesn't optimize it away.
 		volatile int i = 0;
  218:	1a 82       	std	Y+2, r1	; 0x02

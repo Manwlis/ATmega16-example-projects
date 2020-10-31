@@ -18,7 +18,8 @@ volatile unsigned char segments_encoding[11] __attribute__ ((section (".noinit")
 volatile unsigned char transmitter_status __attribute__ ((section (".noinit")));
 volatile unsigned char num_transmits_left __attribute__ ((section (".noinit")));
 
-
+void init_7_seg_driver();
+void init_USART_driver();
 /*-------------------------------------------------------------------------
 * Main function. Calls initialization functions, enables interrupt and 
 * stay in a infinite loop. Functionality is serviced through interrupts.
