@@ -1,8 +1,12 @@
 /*
  * main.c
  *
- * Created: 30/10/2020 11:15:13
+ * Initializations for the drivers and main loop.
+ * Functionality is served through interrupts.
+ *
+ * Created: 30/10/2020
  * Author : Emmanouil Petrakos
+ * Developed with AtmelStudio 7.0.129
  */ 
 
 #include <avr/io.h>

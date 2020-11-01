@@ -1,6 +1,7 @@
 ﻿;
 ; USART_driver.asm
-; Driver for the USART on PORTC.
+;
+; Driver for the USART. Controls the data in SRAM for the 7 segment display.
 ;
 ; Created: 22/10/2020
 ; Author : Emmanouil Petrakos

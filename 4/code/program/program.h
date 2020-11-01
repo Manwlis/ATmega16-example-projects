@@ -3,8 +3,9 @@
  *
  * Macros and enumerations.
  *
- * Created: 30/10/2020 12:19:38 μμ
+ * Created: 30/10/2020
  * Author : Emmanouil Petrakos
+ * Developed with AtmelStudio 7.0.129
  */ 
 
 
