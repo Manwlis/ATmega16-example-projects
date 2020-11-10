@@ -1,0 +1,49 @@
+// dot -Tpng 1.gv -Gdpi=200 -o 1.png
+
+digraph H
+{
+	node [shape=record];
+
+	ranksep =0.05;
+
+
+
+
+	nd_10   [label = "Initialize 7 Seg" fixedsize=true width=2 height=0.5];
+	nd_11   [label = "Initialize USART" fixedsize=true width=2 height=0.5];
+	nd_12   [label = "Main Loop" fixedsize=true width=2 height=0.5];
+
+	nd_13   [label = "Timer0 ISR" fixedsize=true width=2 height=0.5];
+
+	nd_14   [label = "RxT ISR" fixedsize=true width=2 height=0.5];
+	nd_15   [label = "UDRE ISR" fixedsize=true width=2 height=0.5];
+
+	subgraph cluster_new
+	{
+		label = "Lab 5 Code Structure";
+		
+		subgraph cluster_new_USART_driver
+		{
+			rankdir=RL;
+			label = "USART_driver.c";
+			{rank= same; nd_14;}
+			{rank= same; nd_15;}
+	        nd_14 -> nd_15 [style=invis];
+		}
+		
+		subgraph cluster_new_7_segment_driver
+		{
+			label = "7_segment_driver.c";
+			nd_13;
+		}
+
+		subgraph cluster_new_program
+		{
+			label = "program.c";
+	        nd_10 -> nd_11 [style=invis];
+	        nd_11 -> nd_12 [style=invis];
+		}
+
+
+	}
+}

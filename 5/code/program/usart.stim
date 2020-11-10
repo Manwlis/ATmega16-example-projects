@@ -1,0 +1,51 @@
+// Stimuli file can't clear .log files, only append them. lab.log must be manually cleared before every debug.
+
+$log TCNT2
+$startlog lab.log
+
+// send N1<CR><LF> 
+R20 = 0x4E
+UCSRA = 0b10000000
+#2000
+
+R20 = 0x31
+UCSRA = 0b10000000
+#2000
+
+R20 = 0x0D
+UCSRA = 0b10000000
+#2000
+
+UCSRA = 0b10000000
+R20 = 0x0A
+
+#40000
+
+// send N123<CR><LF> 
+R20 = 0x4E
+UCSRA = 0b10000000
+#2000
+
+R20 = 0x31
+UCSRA = 0b10000000
+#2000
+
+R20 = 0x32
+UCSRA = 0b10000000
+#2000
+
+R20 = 0x33
+UCSRA = 0b10000000
+#2000
+
+R20 = 0x0D
+UCSRA = 0b10000000
+#2000
+
+UCSRA = 0b10000000
+R20 = 0x0A
+
+#40000
+
+
+$stoplog
