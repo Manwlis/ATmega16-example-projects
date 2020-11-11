@@ -1,4 +1,4 @@
-// dot -Tpng 1.gv -Gdpi=200 -o 1.png
+// dot -Tpng code structure.gv -Gdpi=200 -o code structure.png
 
 digraph H
 {

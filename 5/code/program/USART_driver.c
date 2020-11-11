@@ -9,8 +9,8 @@
  * Developed with AtmelStudio 7.0.129
  */ 
 
-#include <avr/io.h>
-#include <avr/interrupt.h>
+#include <avr/io.h> // Required for the I/O registers macros
+#include <avr/interrupt.h> // Required for the ISR macro
 #include "program.h"
 
 extern unsigned char data[8];

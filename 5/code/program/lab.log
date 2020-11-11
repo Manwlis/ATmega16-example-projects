@@ -1,16 +1,24 @@
-#6109
+// Stimuli file can't clear .log files, only append them. lab.log must be manually cleared before every debug.#8108
 TCNT2 = 0x4f
 #45
 TCNT2 = 0x4b
-#10440
+#10392
+TCNT2 = 0x0d
+#10402
+TCNT2 = 0x0a
+#25162
+TCNT2 = 0x4f
+#45
+TCNT2 = 0x4b
+#10411
 TCNT2 = 0x0d
 #10403
 TCNT2 = 0x0a
-#29112
+#29141
 TCNT2 = 0x4f
 #45
 TCNT2 = 0x4b
-#10426
+#10396
 TCNT2 = 0x0d
 #10403
 TCNT2 = 0x0a

@@ -8,8 +8,8 @@
  * Developed with AtmelStudio 7.0.129
  */ 
 
-#include <avr/io.h>
-#include <avr/interrupt.h>
+#include <avr/io.h> // Required for the I/O registers macros
+#include <avr/interrupt.h> // Required for the ISR macro
 
 extern unsigned char data[8];
 extern unsigned char segments_encoding[11];
@@ -25,32 +25,38 @@ ISR( TIMER0_COMP_vect )
 	PORTA = 0xFF;
 	
 	// Ring counter
-	PORTC = (PORTC >> 7) | (PORTC << 1);
+	// local variable in order to minimize access to I/O ports
+	unsigned char ring_counter = PORTC;
+	ring_counter = ( ring_counter >> 7 ) | ( ring_counter << 1 );
+	PORTC = ring_counter;
 	
 	// Get data based on ring counter
-	// This block replaces assembly's ring_to_bcd and read from memory 
+	// This block replaces assembly's ring_to_bcd and read from memory.
+	// Tried to calculate offset like the assembly implementation with a for loop,
+	// but ISR lasted x3 more cycles. 
 	unsigned char bcd_number;
-	if( PORTC == 0b00000001 )
+
+	if( ring_counter == 0b00000001 )
 		bcd_number = data[0];
-	else if( PORTC == 0b00000010 )
+	else if( ring_counter == 0b00000010 )
 		bcd_number = data[1];
-	else if( PORTC == 0b00000100 )
+	else if( ring_counter == 0b00000100 )
 		bcd_number = data[2];
-	else if( PORTC == 0b00001000 )
+	else if( ring_counter == 0b00001000 )
 		bcd_number = data[3];
-	else if( PORTC == 0b00010000 )
+	else if( ring_counter == 0b00010000 )
 		bcd_number = data[4];
-	else if( PORTC == 0b00100000 )
+	else if( ring_counter == 0b00100000 )
 		bcd_number = data[5];
-	else if( PORTC == 0b01000000 )
+	else if( ring_counter == 0b01000000 )
 		bcd_number = data[6];
-	else if( PORTC == 0b10000000 )
+	else if( ring_counter == 0b10000000 )
 		bcd_number = data[7];
 		
 	// illegal data. PORTA = 0xFF
 	if( bcd_number > 0x0A )
 		return;
 
-	// Out to port
+	// Out to port. Replaces assembly's BCD_to_7_segment_Decoder and out
 	PORTA = segments_encoding[bcd_number];
 } // breakpoint here to check 7 segment ports
