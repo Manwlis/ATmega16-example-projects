@@ -30,32 +30,19 @@ ISR( TIMER0_COMP_vect )
 	ring_counter = ( ring_counter >> 7 ) | ( ring_counter << 1 );
 	PORTC = ring_counter;
 	
-	// Get data based on ring counter
-	// This block replaces assembly's ring_to_bcd and read from memory.
-	// Tried to calculate offset like the assembly implementation with a for loop,
-	// but ISR lasted x3 more cycles. 
-	unsigned char bcd_number;
-
-	if( ring_counter == 0b00000001 )
-		bcd_number = data[0];
-	else if( ring_counter == 0b00000010 )
-		bcd_number = data[1];
-	else if( ring_counter == 0b00000100 )
-		bcd_number = data[2];
-	else if( ring_counter == 0b00001000 )
-		bcd_number = data[3];
-	else if( ring_counter == 0b00010000 )
-		bcd_number = data[4];
-	else if( ring_counter == 0b00100000 )
-		bcd_number = data[5];
-	else if( ring_counter == 0b01000000 )
-		bcd_number = data[6];
-	else if( ring_counter == 0b10000000 )
-		bcd_number = data[7];
-		
-	// illegal data. PORTA = 0xFF
-	if( bcd_number > 0x0A )
-		return;
+	// Get data based on ring counter. This block replaces assembly's ring_to_bcd
+	unsigned char shift_counter = 0;
+	while(1)
+	{
+		ring_counter >>= 1;
+		if( ring_counter != 0 )
+			shift_counter++;
+		else
+			break;
+	}
+	
+	//  Read from memory.
+	unsigned char bcd_number = data[shift_counter];
 
 	// Out to port. Replaces assembly's BCD_to_7_segment_Decoder and out
 	PORTA = segments_encoding[bcd_number];

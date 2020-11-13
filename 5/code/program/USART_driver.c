@@ -58,7 +58,7 @@ ISR( USART_RXC_vect )
 	else // Frame is a number
 	{
 		// Moves all data one position forward. Top element gets discarded.
-		for( unsigned char i = num_of_data - 1 ; i != 0xFF ; i-- ) // last element is 0xFF
+		for( unsigned char i = num_of_data - 2 ; i != 0xFF ; i-- ) // last element is 0xFF
 			data[ i + 1 ] = data[i];
 		// Save new data. Top half byte cleared, ascii -> bcd
 		data[0] = received_frame & 0x0F;
