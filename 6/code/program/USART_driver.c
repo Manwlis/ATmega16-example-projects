@@ -16,8 +16,8 @@
 
 extern unsigned char data[8];
 extern unsigned char transmitter_status;
-extern unsigned char num_transmits_left;
-extern unsigned char software_reset;
+extern unsigned char OK_transmits_left;
+extern unsigned char R_transmits_left;
 extern unsigned char response;
 
 //--------------------------------------------------------------------
@@ -52,15 +52,13 @@ ISR( USART_RXC_vect )
 		
 	else if( received_frame == 0x0A ) // <LF>
 	{
-		// OK<CR><LF> response mode
-		response = 'O';
 		// Increase pending responses counter
-		num_transmits_left++;
+		OK_transmits_left++;
 		// Enable transmitter interrupts to start the response. If it is already enabled, nothing changes.
 		UCSRB |= ( 1 << UDRIE ); // breakpoint here to check memory after message
-		// response takes ~4 ms maximum. Enough time to complete it.
-		wdt_enable( WDTO_30MS );
-		software_reset = 1;
+		// Simulator is bugged, wdt uses system clock instead of its own oscillator. For simulation with 10MHz, use x10 the required delay
+		// response takes ~4 ms if UDRE buffer full. Enough time to complete it.
+		wdt_enable( WDTO_60MS );
 	}
 	else // Frame is a number
 	{
@@ -82,9 +80,20 @@ ISR( USART_UDRE_vect )
 	#define none 0xFF
 	if( transmitter_status == none )
 	{
-		register unsigned char temp = response;
-		// Decrease pending responses
-		num_transmits_left--;
+		// check accumulated responses
+		unsigned char temp;
+		if( OK_transmits_left != 0 )
+		{		
+			// Decrease pending responses
+			OK_transmits_left--;
+			temp = 'O';
+		}
+		else
+		{
+			// Decrease pending responses
+			R_transmits_left--;
+			temp = 'R';
+		}
 		// Change State
 		transmitter_status = temp;
 		// Send character
@@ -130,7 +139,7 @@ ISR( USART_UDRE_vect )
 		// Change State
 		transmitter_status = none;
 		// If no more transmits required, disable transmitter interrupts.
-		if( num_transmits_left == 0 )
+		if( OK_transmits_left == 0 && R_transmits_left == 0 )
 			UCSRB &= ~( 1 << UDRIE );
 	}
 }

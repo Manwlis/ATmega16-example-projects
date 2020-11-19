@@ -1,0 +1,23 @@
+// dot -Tpng FSM_transmitter.gv -o FSM_transmitter.png
+
+digraph finite_state_machine {
+    rankdir=TB;
+
+    node [shape = point ]; qi;
+    node [shape = circle, width=.8]; "-";
+    node [shape = circle]; R;
+    node [shape = circle]; O;
+    node [shape = circle]; K;
+    node [shape = circle]; CR;
+    node [shape = circle]; LF;
+
+
+    qi -> "-";
+    "-"  -> R  [ label = "UDRE\nInterrupt 1" ];
+    "-"  -> O  [ label = "UDRE\nInterrupt 0" ];
+    R  -> K  [ label = "UDRE\nInterrupt" ];
+    O  -> K  [ label = "UDRE\nInterrupt" ];
+    K  -> CR [ label = "UDRE\nInterrupt" ];
+    CR -> LF [ label = "UDRE\nInterrupt" ];
+    LF -> "-"  [ label = "UDRE\nInterrupt" ];
+}

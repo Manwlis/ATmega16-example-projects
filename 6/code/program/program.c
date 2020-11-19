@@ -21,9 +21,8 @@ volatile unsigned char data[8] __attribute__ ((section (".noinit")));
 volatile unsigned char segments_encoding[11] __attribute__ ((section (".noinit")));
 
 volatile unsigned char transmitter_status __attribute__ ((section (".noinit")));
-volatile unsigned char num_transmits_left __attribute__ ((section (".noinit")));
-volatile unsigned char software_reset __attribute__ ((section (".noinit")));
-volatile unsigned char response __attribute__ ((section (".noinit")));
+volatile unsigned char OK_transmits_left __attribute__ ((section (".noinit")));
+volatile unsigned char R_transmits_left __attribute__ ((section (".noinit")));
 
 void init_7_seg_driver_IO();
 void init_7_seg_driver_mem();
@@ -32,12 +31,18 @@ void init_USART_driver_mem();
 
 
 /*-------------------------------------------------------------------------
-* Main function. Calls initialization functions, enables interrupt and 
-* stay in a infinite loop. Functionality is serviced through interrupts.
+* Main function. Checks reset source, calls appropriate initialization functions, 
+* enables interrupt and stay in a infinite loop. Functionality is serviced through interrupts.
 *------------------------------------------------------------------------*/
 int main()
 {
-	// Compiler sets stack pointer. No need for the program to do anything.
+	// avr-libc recommends to store MCUSR in a local variable early after the reset and use that
+	unsigned char reset_source = MCUCSR;
+	// clear MCUCSR
+	MCUCSR = 0x00;
+	// On ATmega16 WDT clears after reset. No need to manually disable it
+	
+	// Compiler sets stack pointer. No need for the program to do anything
 	
 	// Initialize drivers
 	// Watchdog timer clears I/O registers, they must always get reinitialized
@@ -45,23 +50,20 @@ int main()
 	init_USART_driver_IO();
 	
 	// if power-on reset, or warm start is disabled
-	if( !software_reset || !warm_start_enable )
-	{	// Watchdog timer doesn't affect SRAM, no need to be initialized again
+	if( ( reset_source & ( 1 << PORF ) ) || !warm_start_enable )
+	{	// Watchdog reset doesn't affect SRAM, no need to be initialized again
 		init_7_seg_driver_mem();
 		init_USART_driver_mem();
 	}
-	
+
 	// Send reset response
-	if( software_reset )
+	if( reset_source & ( 1 << WDRF ) )
 	{
-		// Increase pending responses counter
-		num_transmits_left++;
-		// Enable transmitter interrupts to start the response.
+		// Increase reset pending responses counter
+		R_transmits_left++;
+		// Enable transmitter interrupts to start the response
 		UCSRB |= ( 1 << UDRIE );
-		// R<CR><LF> response mode
-		response = 'R';
 	}
-	
 	
 	// Enable global interrupts
 	sei(); // Breakpoint here to execute stimuli file
@@ -151,5 +153,6 @@ void init_USART_driver_mem()
 	#define none 0xFF
 	// Initialize transmitter's FSM to neutral state and number of remaining transmits to 0.
 	transmitter_status = none;
-	num_transmits_left = 0;
+	OK_transmits_left = 0;
+	R_transmits_left = 0;
 }

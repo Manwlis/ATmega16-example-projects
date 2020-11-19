@@ -1,0 +1,45 @@
+// dot -Tpng code_structure.gv -Gdpi=200 -o code_structure.png
+
+digraph H
+{
+	node [shape=record];
+	ranksep =0.02;
+    nodesep=0.02;
+
+	nd_10   [label = "Init 7 Seg I/O" fixedsize=true width=2 height=0.25];
+	nd_11   [label = "Init USART I/O" fixedsize=true width=2 height=0.25];
+	nd_16   [label = "Init 7 Seg mem" fixedsize=true width=2 height=0.25];
+	nd_17   [label = "Init USART mem" fixedsize=true width=2 height=0.25];
+	nd_12   [label = "Main" fixedsize=true width=2 height=0.5];
+
+	nd_13   [label = "Timer0 ISR" fixedsize=true width=2 height=0.5];
+
+	nd_14   [label = "RxT ISR" fixedsize=true width=2 height=0.5];
+	nd_15   [label = "UDRE ISR" fixedsize=true width=2 height=0.5];
+
+
+
+	subgraph cluster_new
+	{
+		label = "Lab 6 Code Structure";
+		
+		subgraph cluster_new_USART_driver
+		{
+			label = "USART_driver.c";
+	        nd_14 -> nd_15 [style=invis len=0.02];
+		}
+		subgraph cluster_new_7_segment_driver
+		{
+			label = "7_segment_driver.c";
+			nd_13;
+		}
+		subgraph cluster_new_program
+		{
+			label = "program.c";
+	        nd_10 -> nd_11 [style=invis];
+	        nd_11 -> nd_16 [style=invis];
+	        nd_16 -> nd_17 [style=invis];
+	        nd_17 -> nd_12 [style=invis];
+		}
+	}
+}
