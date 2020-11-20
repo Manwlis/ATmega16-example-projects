@@ -128,11 +128,15 @@ void init_USART_driver_IO()
 	DDRD |= ( 0 << 0 ); // RXD
 	DDRD |= ( 1 << 1 ); // TXD
 	
-	// Set UBRR for 9600 baud rate when clock is 10MHz. Let compiler calculate the correct value
+	// Set UBRR for 9600 baud rate when clock is 10MHz. Let compiler calculate the correct values
 	#include <util/setbaud.h>
 	UBRRH = UBRRH_VALUE;
 	UBRRL = UBRRL_VALUE;
-	
+	#if USE_2X
+		UCSRA |= (1 << U2X);
+	#else
+		UCSRA &= ~(1 << U2X);
+	#endif
 	// UCSRA doesn't need to change, initial values are okay
 
 	// Enable receiver, receive completed interrupt the transmitter

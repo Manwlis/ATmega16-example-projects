@@ -12,7 +12,7 @@
 #ifndef PROGRAM_H_
 #define PROGRAM_H_
 	
-	#define F_CPU 1000000
+	#define F_CPU 10000000
 	#define BAUD 9600
 	
 	// Compare register value

@@ -56,9 +56,6 @@ ISR( USART_RXC_vect )
 		OK_transmits_left++;
 		// Enable transmitter interrupts to start the response. If it is already enabled, nothing changes.
 		UCSRB |= ( 1 << UDRIE ); // breakpoint here to check memory after message
-		// Simulator is bugged, wdt uses system clock instead of its own oscillator. For simulation with 10MHz, use x10 the required delay
-		// response takes ~4 ms if UDRE buffer full. Enough time to complete it.
-		wdt_enable( WDTO_60MS );
 	}
 	else // Frame is a number
 	{
@@ -68,6 +65,12 @@ ISR( USART_RXC_vect )
 		// Save new data. Top half byte cleared, ascii -> bcd
 		data[0] = received_frame & 0x0F;
 	}
+	
+	// Reset watchdog timer with any incoming transmit.
+	wdt_reset();
+	// Simulator is bugged, wdt uses system clock instead of its own oscillator. For simulation with 10MHz, use x10 the required delay
+	// response takes ~4 ms if UDRE buffer full. Enough time to complete it.
+	wdt_enable( WDTO_60MS );
 }
 
 
