@@ -14,8 +14,10 @@
 #include "program.h"
 
 extern unsigned char data[8];
+extern unsigned char receiver_status;
 extern unsigned char transmitter_status;
 extern unsigned char OK_transmits_left;
+extern unsigned char scheduler_control;
 
 
 //--------------------------------------------------------------------
@@ -29,27 +31,37 @@ ISR( USART_RXC_vect )
 	unsigned char received_frame = UDR;
 	// for debug
 	received_frame = UDR;
-	asm( "mov %0 , r20" : "=r" (received_frame) );
+	asm( "mov %0 , r20" : "=r" ( received_frame ) );
 	
-	if( received_frame == 0x43 ) // C
+	if( received_frame == 'S' )
+		receiver_status = proc_enable_message; // Set type of message
+		
+	else if( received_frame == 'Q' )
+		receiver_status = proc_disable_message; // Set type of message
+		
+	else if( received_frame == 'C' )
 		for( unsigned char i = 0 ; i < num_of_data ; i++ )
 			data[i] = 0x0A; // Clear data
 			
-	else if( received_frame == 0x4E ) // N
+	else if( received_frame == 'N' )
+	{
+		receiver_status = display_message; // Set type of message
 		for( unsigned char i = 0 ; i < num_of_data ; i++ )
 			data[i] = 0x0A; // Clear data
-	
-	else if( received_frame == 0x41 ) // A
+	}
+	else if( received_frame == 'A' )
 		return; // Do nothing
 		
-	else if( received_frame == 0x54 ) // T
+	else if( received_frame == 'T' )
 		return; // Do nothing
 		
-	else if( received_frame == 0x0D ) // <CR>
+	else if( received_frame == '\r' ) // <CR>
 		return; // Do nothing
 		
-	else if( received_frame == 0x0A ) // <LF>
+	else if( received_frame == '\n' ) // <LF>
 	{
+		// Message ended
+		receiver_status = none;
 		 // Increase pending responses counter
 		OK_transmits_left++;
 		// Enable transmitter interrupts to start the response. If it is already enabled, nothing changes.
@@ -57,11 +69,23 @@ ISR( USART_RXC_vect )
 	}
 	else // Frame is a number
 	{
-		// Moves all data one position forward. Top element gets discarded.
-		for( unsigned char i = num_of_data - 2 ; i != 0xFF ; i-- ) // last element is in position 0x00
+		unsigned char number = received_frame & ascii_to_bcd_mask;
+		// Treatment of a number depends on the type of its message
+		if ( receiver_status == display_message )
+		{	
+			// Moves all data one position forward. Top element gets discarded.
+			for( unsigned char i = num_of_data - 2 ; i != 0xFF ; i-- ) // last element is in position 0x00
 			data[ i + 1 ] = data[i];
-		// Save new data. Top half byte cleared, ascii -> bcd
-		data[0] = received_frame & 0x0F;
+			// Save new data. Top half byte cleared, ascii -> bcd
+			data[0] = number;
+		}
+		else if( receiver_status == proc_enable_message )
+			// Enable process
+			scheduler_control |= ( 1 << number );
+
+		else if( receiver_status == proc_disable_message )
+			// Disable process
+			scheduler_control &= ~( 1 << number );
 	}
 }
 
@@ -72,7 +96,6 @@ ISR( USART_RXC_vect )
 //--------------------------------------------------------------------
 ISR( USART_UDRE_vect )
 {
-	#define none 0xFF
 	if( transmitter_status == none )
 	{
 		// Decrease pending responses

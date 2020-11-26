@@ -15,9 +15,25 @@
 	#define	F_CPU	10000000
 	#define	BAUD		9600
 	
-	// Compare register value
+	#define ascii_to_bcd_mask 0x0F
+	
+	// Compare register value for timer0
 	#define OCR_value 77
+	
 	// 1 data for each 7 segment
 	#define num_of_data 8
 	
+	// Used to show no transmitting happened or no USART instruction started
+	#define none 0x00
+	
+	// Receiver states
+	#define display_message 'N'
+	#define proc_enable_message 'S'
+	#define proc_disable_message 'Q'
+	
+	// Scheduler process enable bits
+	#define	SCP1EN	0
+	#define	SCP2EN	1
+	#define	SCP3EN	2
+
 #endif /* PROGRAM_H_ */

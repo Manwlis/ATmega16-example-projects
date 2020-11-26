@@ -20,13 +20,18 @@
 volatile unsigned char data[8] __attribute__ ((section (".noinit")));
 volatile unsigned char segments_encoding[11] __attribute__ ((section (".noinit")));
 
+volatile unsigned char receiver_status __attribute__ ((section (".noinit")));
+
 volatile unsigned char transmitter_status __attribute__ ((section (".noinit")));
 volatile unsigned char OK_transmits_left __attribute__ ((section (".noinit")));
+
+volatile unsigned char scheduler_control __attribute__ ((section (".noinit")));
 
 void init_7_seg_driver_IO();
 void init_7_seg_driver_mem();
 void init_USART_driver_IO();
 void init_USART_driver_mem();
+void init_scheduler();
 
 
 /*-------------------------------------------------------------------------
@@ -42,6 +47,8 @@ int main()
 	init_USART_driver_IO();
 	init_7_seg_driver_mem();
 	init_USART_driver_mem();
+	// Initialize scheduler
+	init_scheduler();
 	
 	// Enable global interrupts
 	sei(); // Breakpoint here to execute stimuli file
@@ -111,9 +118,9 @@ void init_USART_driver_IO()
 	UBRRH = UBRRH_VALUE;
 	UBRRL = UBRRL_VALUE;
 	#if USE_2X
-		UCSRA |= (1 << U2X);
+		UCSRA |= ( 1 << U2X );
 	#else
-		UCSRA &= ~(1 << U2X);
+		UCSRA &= ~( 1 << U2X );
 	#endif
 	
 	// UCSRA doesn't need to change, initial values are okay
@@ -133,8 +140,19 @@ void init_USART_driver_IO()
 *------------------------------------------------------------------------*/
 void init_USART_driver_mem()
 {
-	#define none 0xFF
 	// Initialize transmitter's FSM to neutral state and number of remaining transmits to 0.
 	transmitter_status = none;
+	receiver_status = none;
 	OK_transmits_left = 0;
+}
+
+
+/*-------------------------------------------------------------------------
+
+*------------------------------------------------------------------------*/
+void init_scheduler()
+{
+	// Enable all processes
+	scheduler_control = 0x00;
+	scheduler_control = ( 1 << SCP1EN ) | ( 1 << SCP2EN ) | ( 1 << SCP3EN );
 }
