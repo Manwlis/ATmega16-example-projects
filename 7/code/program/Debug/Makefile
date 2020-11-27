@@ -38,7 +38,8 @@ SUBDIRS :=
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../7_segment_driver.c \
-../main.c \
+../program.c \
+../processes.c \
 ../USART_driver.c
 
 
@@ -50,22 +51,26 @@ ASM_SRCS +=
 
 OBJS +=  \
 7_segment_driver.o \
-main.o \
+program.o \
+processes.o \
 USART_driver.o
 
 OBJS_AS_ARGS +=  \
 7_segment_driver.o \
-main.o \
+program.o \
+processes.o \
 USART_driver.o
 
 C_DEPS +=  \
 7_segment_driver.d \
-main.d \
+program.d \
+processes.d \
 USART_driver.d
 
 C_DEPS_AS_ARGS +=  \
 7_segment_driver.d \
-main.d \
+program.d \
+processes.d \
 USART_driver.d
 
 OUTPUT_FILE_PATH +=program.elf
@@ -89,7 +94,14 @@ LINKER_SCRIPT_DEP+=
 	@echo Finished building: $<
 	
 
-./main.o: .././main.c
+./program.o: .././program.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)D:\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"D:\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega16 -B "D:\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\gcc\dev\atmega16" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+./processes.o: .././processes.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)D:\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"D:\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega16 -B "D:\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.3.300\gcc\dev\atmega16" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

@@ -12,7 +12,7 @@
 #ifndef PROGRAM_H_
 #define PROGRAM_H_
 	
-	#define	F_CPU	10000000
+	#define	F_CPU	10000000UL
 	#define	BAUD		9600
 	
 	#define ascii_to_bcd_mask 0x0F

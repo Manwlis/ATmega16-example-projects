@@ -9,9 +9,9 @@
  * Developed with AtmelStudio 7.0.129
  */ 
 
+#include "program.h"
 #include <avr/io.h> // Required for the I/O registers macros
 #include <avr/interrupt.h> // Required for the intrinsic function sei()
-#include "program.h"
 
 
 // __attribute__ ((section (".noinit"))) because there is no need to be 
@@ -49,16 +49,21 @@ int main()
 	init_USART_driver_mem();
 	// Initialize scheduler
 	init_scheduler();
+	// Initialize processes
+	init_processes();
 	
 	// Enable global interrupts
 	sei(); // Breakpoint here to execute stimuli file
 	
     while(1) 
     {
-		// Visual debugger doesn't really like empty while loops.
-		// It shows that the loop loops at the previous line.
-		// Volatile so compiler doesn't optimize it away.
-		volatile int i = 0;
+		// for now all enabled processes run one after another.
+		if( scheduler_control & ( 1 << SCP1EN ) )
+			bcd_counter_1ms();
+		if( scheduler_control & ( 1 << SCP2EN ) )
+			ring_counter_5ms();
+		if( scheduler_control & ( 1 << SCP3EN ) )
+			LED_blinking_7ms();
     }
 }
 
@@ -104,6 +109,7 @@ void init_7_seg_driver_mem()
 	segments_encoding[10] = 0b11111111;
 }
 
+
 /*-------------------------------------------------------------------------
 * Initialize ports and timer that are used by the USART driver.
 *------------------------------------------------------------------------*/
@@ -148,11 +154,11 @@ void init_USART_driver_mem()
 
 
 /*-------------------------------------------------------------------------
-
+* Initialize scheduler memory.
+* TO-DO: lab8
 *------------------------------------------------------------------------*/
 void init_scheduler()
 {
 	// Enable all processes
 	scheduler_control = 0x00;
-	scheduler_control = ( 1 << SCP1EN ) | ( 1 << SCP2EN ) | ( 1 << SCP3EN );
 }

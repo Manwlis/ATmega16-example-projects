@@ -9,9 +9,9 @@
  * Developed with AtmelStudio 7.0.129
  */ 
 
+#include "program.h"
 #include <avr/io.h> // Required for the I/O registers macros
 #include <avr/interrupt.h> // Required for the ISR macro
-#include "program.h"
 
 extern unsigned char data[8];
 extern unsigned char receiver_status;
@@ -81,11 +81,11 @@ ISR( USART_RXC_vect )
 		}
 		else if( receiver_status == proc_enable_message )
 			// Enable process
-			scheduler_control |= ( 1 << number );
+			scheduler_control |= ( 1 << ( number - 1 ) ); // process 1 enable is in bit 0 etc. -1 on number to get the correct bit.
 
 		else if( receiver_status == proc_disable_message )
 			// Disable process
-			scheduler_control &= ~( 1 << number );
+			scheduler_control &= ~( 1 << ( number - 1 ) );
 	}
 }
 

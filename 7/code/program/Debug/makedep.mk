@@ -4,7 +4,9 @@
 
 7_segment_driver.c
 
-main.c
+program.c
+
+processes.c
 
 USART_driver.c
 
