@@ -32,8 +32,8 @@
 	#define proc_disable_message 'Q'
 	
 	// Scheduler process enable bits
-	#define	SCP1EN	0
-	#define	SCP2EN	1
-	#define	SCP3EN	2
+	#define	SCPE1	0
+	#define	SCPE2	1
+	#define	SCPE3	2
 
 #endif /* PROGRAM_H_ */

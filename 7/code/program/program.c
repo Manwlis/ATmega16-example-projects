@@ -58,11 +58,11 @@ int main()
     while(1) 
     {
 		// for now all enabled processes run one after another.
-		if( scheduler_control & ( 1 << SCP1EN ) )
+		if( scheduler_control & ( 1 << SCPE1 ) )
 			bcd_counter_1ms();
-		if( scheduler_control & ( 1 << SCP2EN ) )
+		if( scheduler_control & ( 1 << SCPE2 ) )
 			ring_counter_5ms();
-		if( scheduler_control & ( 1 << SCP3EN ) )
+		if( scheduler_control & ( 1 << SCPE3 ) )
 			LED_blinking_7ms();
     }
 }
