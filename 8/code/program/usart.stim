@@ -1,0 +1,121 @@
+// Stimuli file can't clear .log files, only append them. lab.log must be manually cleared before every debug.
+
+$log TCNT2
+$startlog lab.log
+
+#2000
+
+// send S1<CR><LF> 
+R20 = 0x53
+UCSRA = 0b10000000
+#2000
+
+R20 = 0x31
+UCSRA = 0b10000000
+#2000
+
+R20 = 0x0D
+UCSRA = 0b10000000
+#2000
+
+UCSRA = 0b10000000
+R20 = 0x0A
+#2000
+
+
+// send S2<CR><LF> 
+R20 = 0x53
+UCSRA = 0b10000000
+#2000
+
+R20 = 0x32
+UCSRA = 0b10000000
+#2000
+
+R20 = 0x0D
+UCSRA = 0b10000000
+#2000
+
+UCSRA = 0b10000000
+R20 = 0x0A
+#2000
+
+
+// send S3<CR><LF> 
+R20 = 0x53
+UCSRA = 0b10000000
+#2000
+
+R20 = 0x33
+UCSRA = 0b10000000
+#2000
+
+R20 = 0x0D
+UCSRA = 0b10000000
+#2000
+
+UCSRA = 0b10000000
+R20 = 0x0A
+#2000
+
+#1000000
+
+
+// send Q1<CR><LF> 
+R20 = 0x51
+UCSRA = 0b10000000
+#2000
+
+R20 = 0x31
+UCSRA = 0b10000000
+#2000
+
+R20 = 0x0D
+UCSRA = 0b10000000
+#2000
+
+UCSRA = 0b10000000
+R20 = 0x0A
+#2000
+
+
+// send Q2<CR><LF> 
+R20 = 0x51
+UCSRA = 0b10000000
+#2000
+
+R20 = 0x32
+UCSRA = 0b10000000
+#2000
+
+R20 = 0x0D
+UCSRA = 0b10000000
+#2000
+
+UCSRA = 0b10000000
+R20 = 0x0A
+#2000
+
+
+// send Q3<CR><LF> 
+R20 = 0x51
+UCSRA = 0b10000000
+#2000
+
+R20 = 0x33
+UCSRA = 0b10000000
+#2000
+
+R20 = 0x0D
+UCSRA = 0b10000000
+#2000
+
+UCSRA = 0b10000000
+R20 = 0x0A
+#2000
+
+
+#100000
+
+
+$stoplog
