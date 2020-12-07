@@ -25,18 +25,18 @@ volatile unsigned char receiver_status __attribute__ ((section (".noinit")));
 volatile unsigned char transmitter_status __attribute__ ((section (".noinit")));
 volatile unsigned char OK_transmits_left __attribute__ ((section (".noinit")));
 
-volatile unsigned char scheduler_control __attribute__ ((section (".noinit")));
+extern unsigned char scheduler_control;
 
 void init_7_seg_driver_IO();
 void init_7_seg_driver_mem();
 void init_USART_driver_IO();
 void init_USART_driver_mem();
-void init_scheduler();
 
 
 /*-------------------------------------------------------------------------
 * Main function. Checks reset source, calls appropriate initialization functions, 
-* enables interrupt and stay in a infinite loop. Functionality is serviced through interrupts.
+* enables interrupt and stay in a infinite loop that calls running processes. 
+* Functionality is serviced through interrupts.
 *------------------------------------------------------------------------*/
 int main()
 {	
@@ -57,12 +57,12 @@ int main()
 	
     while(1) 
     {
-		// for now all enabled processes run one after another.
-		if( scheduler_control & ( 1 << SCPE1 ) )
+		// Continuously call the process chosen by the scheduler
+		if( scheduler_control & ( 1 << SCPR1 ) )
 			bcd_counter_1ms();
-		if( scheduler_control & ( 1 << SCPE2 ) )
+		if( scheduler_control & ( 1 << SCPR2 ) )
 			ring_counter_5ms();
-		if( scheduler_control & ( 1 << SCPE3 ) )
+		if( scheduler_control & ( 1 << SCPR3 ) )
 			LED_blinking_7ms();
     }
 }
@@ -150,28 +150,4 @@ void init_USART_driver_mem()
 	transmitter_status = none;
 	receiver_status = none;
 	OK_transmits_left = 0;
-}
-
-
-/*-------------------------------------------------------------------------
-* Initialize scheduler memory.
-* TO-DO: lab8
-*------------------------------------------------------------------------*/
-void init_scheduler()
-{
-	// Enable all processes
-	scheduler_control = 0x00;
-	
-	// Set Timer2 at ~100ms
-	TCCR1B = ( 1 << WGM12 ) | ( 1 << CS12 ) | ( 1 << CS10 ); // Set Timer/Counter2 prescaler to 1024 and Compare Mode to clear counter on match
-	TIMSK = 1 << OCIE1A; // Enable Timer/Counter2 Output Compare Match Interrupt
-	
-	
-	OCR1AH = 1;
-	OCR1AL = 10;
-}
-
-ISR( TIMER1_COMPA_vect )
-{
-	int i = 0;
 }

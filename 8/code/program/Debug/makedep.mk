@@ -8,5 +8,7 @@ processes.c
 
 program.c
 
+scheduler.c
+
 USART_driver.c
 

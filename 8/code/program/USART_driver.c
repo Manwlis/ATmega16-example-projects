@@ -20,11 +20,12 @@ extern unsigned char OK_transmits_left;
 extern unsigned char scheduler_control;
 
 
-//--------------------------------------------------------------------
-// Interrupt service routine for USART receive completed.
-// Communication is errorless and previous/next inputs/states are irrelevant so a state-machine isn't needed.
-// Only the current input is needed to take the appropriate action.
-//--------------------------------------------------------------------
+/*-------------------------------------------------------------------------
+* Interrupt service routine for USART receive completed.
+* Communication is errorless. No error-find/solve code is needed.
+* Treatment of number frames depends on the start of the message. Memory is needed.
+* For any other frame, only current input is needed to take the appropriate action.
+*------------------------------------------------------------------------*/
 ISR( USART_RXC_vect )
 {
 	// Receive frame
@@ -90,10 +91,10 @@ ISR( USART_RXC_vect )
 }
 
 
-//--------------------------------------------------------------------
-// Interrupt service routine for USART transmitter completed.
-// FSM is one way (see report), input is irrelevant. Only current state is needed to compute next state.
-//--------------------------------------------------------------------
+/*-------------------------------------------------------------------------
+* Interrupt service routine for USART transmitter completed.
+* FSM is one way. Only current state is needed to compute next state.
+*------------------------------------------------------------------------*/
 ISR( USART_UDRE_vect )
 {
 	if( transmitter_status == none )

@@ -31,9 +31,17 @@
 	#define proc_enable_message 'S'
 	#define proc_disable_message 'Q'
 	
-	// Scheduler process enable bits
+	// SCheduler Process Enable bits
 	#define	SCPE1	0
 	#define	SCPE2	1
 	#define	SCPE3	2
+	// SCheduler Process Running bits
+	#define	SCPR1	3
+	#define	SCPR2	4
+	#define	SCPR3	5
+	
+	// Compare registers A value for timer1
+	#define OCR1A_value 15624
+	
 
 #endif /* PROGRAM_H_ */
