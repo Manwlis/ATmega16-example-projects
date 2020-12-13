@@ -1,0 +1,20 @@
+log PORTD
+$startlog lab.log
+
+
+PINA = 0b00000001
+#1000 // toulaxiston ena interrupt
+
+PINA = 0b00000011
+#100 // na to kanw 1/10 tou interrupt
+
+PINA = 0b00000010
+#100 // na to kanw 1/10 tou interrupt
+
+PINA = 0b00000011
+#100 // na to kanw 1/10 tou interrupt
+
+PINA = 0b00000010
+#100 // na to kanw 1/10 tou interrupt
+
+$stoplog
