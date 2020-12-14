@@ -1,71 +1,69 @@
-$log PINA
 $log PORTB
 $startlog lab.log
 
-
-PINA = 0b00000001 // Starting potition. For initialization
+PIND = 0b00000100 // Starting potition. For initialization
 
 #100000 // Time of a window.
 #1000 // In the first timer interrupt nothing should change.
 
 // Switch flips. For a moment the movable electrobe doesn't touch any stationary electrode
-PINA = 0b00000011
+PIND = 0b00001100
 
 #100
 // The movable electrobe hits the stationary electrode
-PINA = 0b00000010
+PIND = 0b00001000
 
 #100
 // And starts bouncing a lot
-PINA = 0b00000011
+PIND = 0b00001100
 
 #1000 // In variable intervals
-PINA = 0b00000010
+PIND = 0b00001000
 
 #10000
-PINA = 0b00000011
+PIND = 0b00001100
 
 #2000
-PINA = 0b00000010
+PIND = 0b00001000
 
 #3000
-PINA = 0b00000011
+PIND = 0b00001100
 
 #1000
-PINA = 0b00000010
+PIND = 0b00001000
 
 #10000
-PINA = 0b00000011
+PIND = 0b00001100
 
 #2000
-PINA = 0b00000010
+PIND = 0b00001000
 
 #1500
-PINA = 0b00000011
+PIND = 0b00001100
 
 #2000
-PINA = 0b00000010
+PIND = 0b00001000
 
 #2000 // For a total time of ~4 ms
 
 #150000 // Get to the next window near it's end. One more polling were nothing happens
 // I want to try the polling during the bouncing
-PINA = 0b00000011
+PIND = 0b00001100
 
 #100
-PINA = 0b00000001
+PIND = 0b00000100
 
 #1000
-PINA = 0b00000011
+PIND = 0b00001100
 
 #30000
-PINA = 0b00000001
+PIND = 0b00000100
 
 #1000
-PINA = 0b00000011
+PIND = 0b00001100
 
 #3300
-PINA = 0b00000001
+PIND = 0b00000100
 
 #30000
 

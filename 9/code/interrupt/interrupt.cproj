@@ -12,9 +12,9 @@
     <OutputFileName>$(MSBuildProjectName)</OutputFileName>
     <OutputFileExtension>.elf</OutputFileExtension>
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
-    <AssemblyName>polling</AssemblyName>
-    <Name>polling</Name>
-    <RootNamespace>polling</RootNamespace>
+    <AssemblyName>interrupt</AssemblyName>
+    <Name>interrupt</Name>
+    <RootNamespace>interrupt</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
@@ -53,7 +53,7 @@
       </ToolNumber>
       <ToolName xmlns="">Simulator</ToolName>
     </com_atmel_avrdbg_tool_simulator>
-    <StimuliFile>C:\Users\Manolis\Documents\GitHub\HRY411-labs\9\code\polling\SPDT.stim</StimuliFile>
+    <StimuliFile>C:\Users\Manolis\Documents\GitHub\HRY411-labs\9\code\interrupt\SPDT.stim</StimuliFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>

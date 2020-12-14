@@ -1,6 +1,8 @@
 /*
  * polling.c
  *
+ * Debounce an SPDT switch using polling.
+ *
  * Created: 13/12/2020
  * Author : Manolis Petrakos
  */ 
@@ -16,6 +18,11 @@ volatile unsigned char old_A0_state __attribute__ ((section (".noinit")));
 volatile unsigned char old_A1_state __attribute__ ((section (".noinit")));
 
 
+/*-------------------------------------------------------------------------
+* Main function. Calls appropriate initialization functions, enables interrupts
+* and stays in a infinite loop.
+* Functionality is serviced through interrupts.
+*------------------------------------------------------------------------*/
 int main(void)
 {
 	init_polling_driver();
@@ -48,21 +55,22 @@ void init_polling_driver()
 	// Init mem with the initial state of the SPDT
 	old_A0_state = PINA & 0b00000001;
 	old_A1_state = ( PINA & 0b00000010 ) >> 1 ;
+	// And init the output
+	if( old_A0_state == 1 )
+		PORTB |= ( 1 << PB0 );
+	else
+		PORTB &= ~( 1 << PB0 );
 }
 
 
 /*-------------------------------------------------------------------------
 * Interrupt service routine for timer/counter0 compare match mode.
-* 
+* Used for debouncing the SPDT switch.
 *------------------------------------------------------------------------*/
 ISR( TIMER0_COMP_vect )
 {
 	unsigned char current_A0_state = PINA & 0b00000001;
 	unsigned char current_A1_state = ( PINA & 0b00000010 ) >> 1;
-	// The vast majority of the interrupts nothing happened.
-	// Check to this case first to lower median ISR execution time.
-	if( old_A0_state == current_A0_state && old_A1_state == current_A1_state )
-		return; // Nothing changed, nothing to do
 		
 	if( old_A0_state == 0 && current_A0_state == 1 )
 	{
