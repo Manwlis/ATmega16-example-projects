@@ -1,4 +1,3 @@
-$log PINA
 $log PORTB
 $startlog lab.log
 

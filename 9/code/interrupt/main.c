@@ -4,7 +4,7 @@
  * Debounce an SPDT switch using external interrupts.
  *
  * Created: 14/12/2020
- * Author : Manolis Petrakos
+ * Author : Emmanouil Petrakos
  */ 
 
 #include <avr/io.h> // Required for the I/O registers macros
@@ -21,7 +21,7 @@ int main(void)
 {
 	init_external_interrupt_driver();
 	
-	sei();
+	sei(); // breakpoint here to see output after initialization.
 	
     while (1) 
     {
@@ -60,7 +60,7 @@ ISR( INT0_vect )
 	// Interrupt is enabled in falling edge mode, i.e. when PD2 becomes 0.
 	// 0 appears only when touching/bouncing, so this is the side were the moving electrode is.
 	PORTB &= ~( 1 << PB0 );
-}
+} // breakpoint here to see the change after the interrupt. One step forward for last line to register.
 
 
 /*-------------------------------------------------------------------------

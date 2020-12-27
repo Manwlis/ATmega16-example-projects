@@ -4,7 +4,7 @@
  * Debounce an SPDT switch using polling.
  *
  * Created: 13/12/2020
- * Author : Manolis Petrakos
+ * Author : Emmanouil Petrakos
  */ 
 
 #include <avr/io.h> // Required for the I/O registers macros
@@ -13,10 +13,10 @@
 // Compare register value for 10 ms delay with /1024 prescaler
 #define OCR0_value 97
 
+void init_polling_driver();
 
 volatile unsigned char old_A0_state __attribute__ ((section (".noinit")));
 volatile unsigned char old_A1_state __attribute__ ((section (".noinit")));
-
 
 /*-------------------------------------------------------------------------
 * Main function. Calls appropriate initialization functions, enables interrupts
@@ -28,7 +28,7 @@ int main(void)
 	init_polling_driver();
 	
 	// Enable global interrupts
-	sei();
+	sei(); // breakpoint here to see outptut after Initializations
 	
     while (1) 
     {
@@ -89,4 +89,4 @@ ISR( TIMER0_COMP_vect )
 		old_A0_state = 0;
 		old_A1_state = 1;
 	}
-}
+}// breakpoint here to see state after polling
