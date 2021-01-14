@@ -44,7 +44,7 @@ int main( void )
 	// One breakpoint when the function get called,
 	matrix_3x3_multiplication( matrix1 , matrix2 , matrix3 );
 	// and another one when it returns to calculate delay.
-	asm("");
+	asm(""); // nop so it's easier to observe the return
 	
 	// Don't let the program hang.
     while (1) 
